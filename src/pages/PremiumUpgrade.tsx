@@ -253,57 +253,59 @@ export function PremiumUpgrade({ setActiveTab }: { setActiveTab: (tab: string) =
               ))}
             </ul>
 
-            {/* Checkout Configuration & Inputs */}
-            <div className="space-y-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
-              <div className="flex items-center justify-between font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-2">
-                <span className="flex items-center gap-1.5">
-                  <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-500" /> Paystack Checkout Settings
-                </span>
-                <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <Lock className="w-3 h-3" /> Secure 256-bit SSL
-                </span>
-              </div>
-
-              <div className="space-y-3 pt-1">
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Paystack Test Public Key</label>
-                  <input
-                    type="text"
-                    value={paystackKey}
-                    onChange={(e) => setPaystackKey(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 font-mono text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-amber-500 outline-none text-[11px]"
-                    placeholder="pk_test_..."
-                  />
-                  <p className="text-[10px] text-slate-400 mt-1">Uses official Paystack inline popup sandbox environment.</p>
+            {/* Checkout Configuration & Inputs - Hidden from public */}
+            {typeof window !== 'undefined' && (window as any).__ADMIN__ && (
+              <div className="space-y-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+                <div className="flex items-center justify-between font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-2">
+                  <span className="flex items-center gap-1.5">
+                    <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-500" /> Paystack Checkout Settings
+                  </span>
+                  <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Secure 256-bit SSL
+                  </span>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Account Email</label>
-                  <input
-                    type="text"
-                    disabled
-                    value={user?.email || 'customer@footypredict.ai'}
-                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 text-slate-600 dark:text-slate-400 text-xs cursor-not-allowed"
-                  />
+                <div className="space-y-3 pt-1">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Paystack Test Public Key</label>
+                    <input
+                      type="text"
+                      value={paystackKey}
+                      onChange={(e) => setPaystackKey(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 font-mono text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-amber-500 outline-none text-[11px]"
+                      placeholder="pk_test_..."
+                    />
+                    <p className="text-[10px] text-slate-400 mt-1">Uses official Paystack inline popup sandbox environment.</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Account Email</label>
+                    <input
+                      type="text"
+                      disabled
+                      value={user?.email || 'customer@footypredict.ai'}
+                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 text-slate-600 dark:text-slate-400 text-xs cursor-not-allowed"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Mobile Phone (For Alerts)</label>
+                    <input
+                      type="text"
+                      value={customPhone}
+                      onChange={(e) => setCustomPhone(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-amber-500 outline-none text-xs"
+                      placeholder="+234 801 234 5678"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Mobile Phone (For Alerts)</label>
-                  <input
-                    type="text"
-                    value={customPhone}
-                    onChange={(e) => setCustomPhone(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-amber-500 outline-none text-xs"
-                    placeholder="+234 801 234 5678"
-                  />
+                <div className="pt-2 flex flex-wrap items-center justify-between gap-1 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  <span>Accepted Methods:</span>
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">💳 Card · 🏦 Transfer · 📱 USSD · ⚡ Mobile Money</span>
                 </div>
               </div>
-
-              <div className="pt-2 flex flex-wrap items-center justify-between gap-1 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                <span>Accepted Methods:</span>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">💳 Card · 🏦 Transfer · 📱 USSD · ⚡ Mobile Money</span>
-              </div>
-            </div>
+            )}
 
             {/* Buttons */}
             <div className="space-y-2">
