@@ -176,12 +176,55 @@ export function UserProfile({ setActiveTab }: { setActiveTab: (tab: string) => v
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Country</label>
                   {editMode ? (
-                    <input
-                      type="text"
+                    <select
                       value={form.country}
                       onChange={e => setForm(f => ({ ...f, country: e.target.value }))}
                       className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    />
+                    >
+                      <option value="">Select a country</option>
+                      <option value="United Kingdom">United Kingdom</option>
+                      <option value="United States">United States</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Germany">Germany</option>
+                      <option value="France">France</option>
+                      <option value="Spain">Spain</option>
+                      <option value="Italy">Italy</option>
+                      <option value="Netherlands">Netherlands</option>
+                      <option value="Belgium">Belgium</option>
+                      <option value="Ireland">Ireland</option>
+                      <option value="Portugal">Portugal</option>
+                      <option value="Sweden">Sweden</option>
+                      <option value="Norway">Norway</option>
+                      <option value="Denmark">Denmark</option>
+                      <option value="Poland">Poland</option>
+                      <option value="Greece">Greece</option>
+                      <option value="Turkey">Turkey</option>
+                      <option value="Nigeria">Nigeria</option>
+                      <option value="Kenya">Kenya</option>
+                      <option value="South Africa">South Africa</option>
+                      <option value="Ghana">Ghana</option>
+                      <option value="Egypt">Egypt</option>
+                      <option value="India">India</option>
+                      <option value="Pakistan">Pakistan</option>
+                      <option value="Bangladesh">Bangladesh</option>
+                      <option value="Japan">Japan</option>
+                      <option value="China">China</option>
+                      <option value="South Korea">South Korea</option>
+                      <option value="Thailand">Thailand</option>
+                      <option value="Singapore">Singapore</option>
+                      <option value="Malaysia">Malaysia</option>
+                      <option value="Philippines">Philippines</option>
+                      <option value="Indonesia">Indonesia</option>
+                      <option value="Vietnam">Vietnam</option>
+                      <option value="Brazil">Brazil</option>
+                      <option value="Mexico">Mexico</option>
+                      <option value="Argentina">Argentina</option>
+                      <option value="Chile">Chile</option>
+                      <option value="Colombia">Colombia</option>
+                      <option value="Peru">Peru</option>
+                      <option value="New Zealand">New Zealand</option>
+                    </select>
                   ) : (
                     <div className="flex items-center gap-2">
                       <Globe className="w-4 h-4 text-slate-400" />
