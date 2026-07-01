@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '../components/ui';
 import { format } from 'date-fns';
 import {
   User, Mail, Globe, FileText, Bell, Shield, Crown,
-  CheckCircle2, XCircle, Edit3, Save, X, Camera, Lock
+  CheckCircle2, XCircle, Edit3, Save, X, Camera, Lock, AlertCircle
 } from 'lucide-react';
 import { MOCK_RESULTS } from '../data/mockData';
+import { getPreviousResults, normalizeBetigoloResult } from '../services/betigoloApi';
 
 export function UserProfile({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const { user, updateProfile } = useAuth();
@@ -17,10 +18,36 @@ export function UserProfile({ setActiveTab }: { setActiveTab: (tab: string) => v
     bio: user?.bio || '',
   });
   const [notifs, setNotifs] = useState(user?.notifications || { email: true, sms: false, push: true });
+  const [betigoloResults, setBetigoloResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const response = await getPreviousResults();
+        if (response.data && response.data.length > 0) {
+          const normalized = response.data.slice(0, 5).map((r, i) => normalizeBetigoloResult(r, i));
+          setBetigoloResults(normalized);
+        } else {
+          setBetigoloResults(MOCK_RESULTS.slice(0, 5));
+        }
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch Betigolo results:', err);
+        setBetigoloResults(MOCK_RESULTS.slice(0, 5));
+        setError('Using cached data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, []);
 
   if (!user) return null;
 
-  const myResults = MOCK_RESULTS.slice(0, 5);
+  const myResults = betigoloResults.length > 0 ? betigoloResults : MOCK_RESULTS.slice(0, 5);
   const wins = myResults.filter(r => r.outcome === 'win').length;
   const totalPlaced = myResults.length;
 
@@ -252,7 +279,20 @@ export function UserProfile({ setActiveTab }: { setActiveTab: (tab: string) => v
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Bet Activity</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Recent Bet Activity</CardTitle>
+            {loading && (
+              <span className="text-xs text-slate-500 flex items-center gap-1.5">
+                <span className="animate-spin">⏳</span> Fetching from Betigolo...
+              </span>
+            )}
+          </div>
+          {error && (
+            <div className="flex items-center gap-2 mt-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 p-2 rounded">
+              <AlertCircle className="w-4 h-4" />
+              <span>{error}</span>
+            </div>
+          )}
         </CardHeader>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
