@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Button, Badge } from '../ui';
 import {
   LayoutDashboard,
@@ -19,47 +20,49 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
-interface LayoutProps {
-  children: React.ReactNode;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}
-
 const mainNavItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'predictions', label: 'All Predictions', icon: Target },
-  { id: 'results', label: 'Results & Slides', icon: History },
-  { id: 'premium', label: 'Premium Access', icon: Crown, isPremiumCta: true },
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/predictions', label: 'All Predictions', icon: Target },
+  { path: '/results', label: 'Results & Slides', icon: History },
+  { path: '/premium', label: 'Premium Access', icon: Crown, isPremiumCta: true },
 ];
 
 const accountNavItems = [
-  { id: 'profile', label: 'My Profile', icon: User },
+  { path: '/profile', label: 'My Profile', icon: User },
 ];
 
 const infoNavItems = [
-  { id: 'about', label: 'About Us', icon: Info },
-  { id: 'contact', label: 'Contact', icon: Mail },
-  { id: 'privacy', label: 'Privacy Policy', icon: Shield },
+  { path: '/about', label: 'About Us', icon: Info },
+  { path: '/contact', label: 'Contact', icon: Mail },
+  { path: '/privacy', label: 'Privacy Policy', icon: Shield },
 ];
 
-export function DashboardLayout({ children, activeTab, setActiveTab }: LayoutProps) {
+export function DashboardLayout() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
 
-  const handleNav = (id: string) => {
-    setActiveTab(id);
+  const getActiveTab = useMemo(() => {
+    const path = location.pathname;
+    if (path === '/') return '/';
+    return path;
+  }, [location.pathname]);
+
+  const handleNav = (path: string) => {
+    navigate(path);
     setIsMobileMenuOpen(false);
   };
 
-  const NavItem = ({ item }: { item: { id: string; label: string; icon: React.ElementType; isPremiumCta?: boolean } }) => {
+  const NavItem = ({ item }: { item: { path: string; label: string; icon: React.ElementType; isPremiumCta?: boolean } }) => {
     const Icon = item.icon;
-    const isActive = activeTab === item.id;
+    const isActive = getActiveTab === item.path || (item.path === '/' && getActiveTab === '/');
     const isPremiumCta = item.isPremiumCta && user?.plan !== 'premium';
 
     return (
       <button
-        onClick={() => handleNav(item.id)}
+        onClick={() => handleNav(item.path)}
         className={clsx(
           'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
           isActive
