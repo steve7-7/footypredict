@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MOCK_RESULTS, STATS } from '../data/mockData';
 import { Card, CardContent, Badge, Button } from '../components/ui';
 import { format } from 'date-fns';
@@ -13,7 +14,8 @@ import { getPreviousResults, normalizeBetigoloResult } from '../services/betigol
 
 type ResultT = typeof MOCK_RESULTS[number] & { source?: 'mock' | 'betigolo-api' };
 
-export function SlideResults({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+export function SlideResults() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [slide, setSlide] = useState(0);
   const [filter, setFilter] = useState<'all' | 'win' | 'loss'>('all');
@@ -526,7 +528,7 @@ export function SlideResults({ setActiveTab }: { setActiveTab: (tab: string) => 
               <h3 className="font-bold text-lg mb-1">See All Premium Results</h3>
               <p className="text-blue-100 text-sm">Our premium picks have an {STATS.premiumWinRate}% win rate. Unlock the full history from Betigolo API.</p>
             </div>
-            <Button variant="secondary" onClick={() => setActiveTab('premium')} className="shrink-0">
+            <Button variant="secondary" onClick={() => navigate('/premium')} className="shrink-0">
               Upgrade Now
             </Button>
           </CardContent>

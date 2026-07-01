@@ -1,21 +1,29 @@
 import { TEAM_MEMBERS, STATS } from '../data/mockData';
 import { Card, CardContent, Button } from '../components/ui';
+import { useNavigate } from 'react-router-dom';
 import { Trophy, Target, TrendingUp, Users, Globe, Shield, ChevronRight } from 'lucide-react';
 
-export function AboutPage({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+export function AboutPage() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-12 max-w-5xl mx-auto">
+      {/* Demo Banner */}
+      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-center">
+        <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+          🎨 <strong>Portfolio Project:</strong> This is a UI/UX demo for a sports prediction platform. Login & premium features are simulated.
+        </p>
+      </div>
+
       {/* Hero */}
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-full text-sm font-semibold">
-          <Trophy className="w-4 h-4" /> About FootyPredict AI
+          <Trophy className="w-4 h-4" /> About FootyPredict
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight">
-          Data-Driven Football<br />Predictions You Can Trust
+          A UI/UX Portfolio for<br />Sports Prediction Design
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          We combine deep statistical analysis, machine learning, and football expertise to deliver
-          the most accurate betting tips on the planet.
+          This project demonstrates professional frontend design, real-time API integration patterns, and thoughtful UX for sports prediction platforms.
         </p>
       </div>
 
@@ -39,29 +47,27 @@ export function AboutPage({ setActiveTab }: { setActiveTab: (tab: string) => voi
         ))}
       </div>
 
-      {/* Our Story */}
+      {/* Design Philosophy */}
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Our Story</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Design Philosophy</h2>
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-            FootyPredict was founded in 2019 by a group of data scientists and football enthusiasts who were frustrated
-            by the quality of predictions available online. Most tips were based on gut feeling — we decided to change that.
+            This project explores how to design a professional sports prediction platform that's both visually polished and functionally complete.
+            We focus on user experience patterns, state management, and data visualization for prediction platforms.
           </p>
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-            Our proprietary AI model processes over 200 data points per match — from historical head-to-head records
-            and team form to weather conditions, player injury reports, and referee tendencies.
+            The frontend integrates with real football APIs where possible, with graceful fallbacks to mock data. Features are categorized as <strong>live</strong> (real data) or <strong>demo</strong> (simulated for showcase).
           </p>
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-            In 5 years, we've grown from a small Discord community to a platform trusted by thousands of bettors worldwide.
-            Our premium members see an average monthly ROI of {STATS.monthlyROI}%.
+            Authentication and premium upgrades are demo-only — designed to showcase how those flows would look in a production app.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4">
           {[
-            { label: 'Data Points Analysed', value: '200+', sub: 'per match', color: 'from-blue-500 to-indigo-600' },
-            { label: 'Premium Win Rate', value: `${STATS.premiumWinRate}%`, sub: 'verified results', color: 'from-emerald-500 to-green-600' },
-            { label: 'Founded', value: '2019', sub: 'London, UK', color: 'from-purple-500 to-violet-600' },
-            { label: 'Monthly ROI', value: `+${STATS.monthlyROI}%`, sub: 'avg for premium', color: 'from-amber-500 to-orange-600' },
+            { label: 'Real API Integration', value: '✓', sub: 'Football data', color: 'from-blue-500 to-indigo-600' },
+            { label: 'Demo Features', value: '✓', sub: 'Premium, auth', color: 'from-emerald-500 to-green-600' },
+            { label: 'Responsive Design', value: '✓', sub: 'Mobile-first', color: 'from-purple-500 to-violet-600' },
+            { label: 'Dark Mode', value: '✓', sub: 'Full support', color: 'from-amber-500 to-orange-600' },
           ].map(item => (
             <div key={item.label} className={`bg-gradient-to-br ${item.color} rounded-2xl p-5 text-white`}>
               <div className="text-3xl font-black mb-1">{item.value}</div>
@@ -72,27 +78,27 @@ export function AboutPage({ setActiveTab }: { setActiveTab: (tab: string) => voi
         </div>
       </div>
 
-      {/* How It Works */}
+      {/* How This Demo Works */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white text-center">How Our AI Works</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white text-center">How This Demo Works</h2>
         <div className="grid sm:grid-cols-3 gap-6">
           {[
             {
               step: '01',
-              title: 'Data Collection',
-              desc: 'We ingest real-time data from 42+ leagues: team form, H2H history, injury reports, line-ups, weather, and more.',
+              title: 'Live Predictions',
+              desc: 'Dashboard & prediction lists fetch real football data from APIs. When APIs are unavailable, mock data provides a seamless fallback.',
               color: 'bg-blue-500',
             },
             {
               step: '02',
-              title: 'AI Analysis',
-              desc: 'Our ML model evaluates 200+ variables and runs thousands of simulations to generate confidence-weighted predictions.',
+              title: 'Demo Features',
+              desc: 'Login creates a session (no real database). Premium upgrades are simulated. Contact form doesn\'t send emails.',
               color: 'bg-indigo-500',
             },
             {
               step: '03',
-              title: 'Expert Review',
-              desc: 'Human experts validate every AI pick before publishing, adding qualitative insight the algorithm might miss.',
+              title: 'Data Transparency',
+              desc: 'Predictions marked "Live API" use real data. Others use mock results to showcase how the UI adapts to different data sources.',
               color: 'bg-violet-500',
             },
           ].map(step => (
@@ -134,14 +140,14 @@ export function AboutPage({ setActiveTab }: { setActiveTab: (tab: string) => voi
         </div>
       </div>
 
-      {/* Values */}
+      {/* Key Features */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white text-center">Our Values</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white text-center">Built With</h2>
         <div className="grid sm:grid-cols-3 gap-4">
           {[
-            { icon: Shield, title: 'Transparency', desc: 'Every result is publicly logged and verified. We never hide losses.' },
-            { icon: TrendingUp, title: 'Accuracy First', desc: 'We would rather give fewer, higher-quality picks than flood you with noise.' },
-            { icon: Users, title: 'Community', desc: 'We grow with our users. Member feedback drives product improvements.' },
+            { icon: Shield, title: 'Type Safety', desc: 'Full TypeScript implementation with strict typing throughout.' },
+            { icon: TrendingUp, title: 'API Integration', desc: 'Real-time data from football APIs with proper error handling.' },
+            { icon: Users, title: 'Responsive Design', desc: 'Mobile-first approach with dark mode and accessibility.' },
           ].map(val => (
             <Card key={val.title}>
               <CardContent className="p-5 flex gap-4 items-start">
@@ -162,14 +168,14 @@ export function AboutPage({ setActiveTab }: { setActiveTab: (tab: string) => voi
       <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-none text-white">
         <CardContent className="p-8 text-center">
           <Trophy className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Ready to Start Winning?</h2>
-          <p className="text-slate-300 mb-6 max-w-md mx-auto">Join thousands of bettors who trust FootyPredict AI every week.</p>
+          <h2 className="text-2xl font-bold mb-2">Explore the Demo</h2>
+          <p className="text-slate-300 mb-6 max-w-md mx-auto">See how a sports prediction platform works. All authentication is session-only.</p>
           <div className="flex gap-3 justify-center">
-            <Button variant="premium" size="lg" onClick={() => setActiveTab('premium')}>
-              Get Premium Access <ChevronRight className="w-4 h-4 ml-1" />
+            <Button variant="premium" size="lg" onClick={() => navigate('/premium')}>
+              View Premium Flow <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
-            <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10" onClick={() => setActiveTab('predictions')}>
-              Browse Free Picks
+            <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10" onClick={() => navigate('/predictions')}>
+              Browse Predictions
             </Button>
           </div>
         </CardContent>

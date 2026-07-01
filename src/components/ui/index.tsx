@@ -1,6 +1,7 @@
 import React from 'react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+export { Skeleton, CardSkeleton, PredictionCardSkeleton } from './Skeleton';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -46,8 +47,8 @@ export function Button({
   };
 
   const sizes = {
-    sm: "h-9 px-3 text-sm",
-    md: "h-10 px-4 py-2",
+    sm: "h-10 px-3 text-sm sm:h-9",
+    md: "h-11 px-4 py-2 sm:h-10",
     lg: "h-12 px-8 text-lg",
   };
 

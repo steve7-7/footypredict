@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { MOCK_PREDICTIONS, MOCK_RESULTS, STATS, type Prediction } from '../data/mockData';
 import { PredictionCard } from '../components/predictions/PredictionCard';
@@ -9,7 +10,8 @@ import {
   Target, Crown, Info, Mail, Shield, ArrowRight, Wifi, RefreshCw
 } from 'lucide-react';
 
-export function DashboardHome({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+export function DashboardHome() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [livePicks, setLivePicks] = useState<Prediction[]>([]);
   const [liveLoading, setLiveLoading] = useState(false);
@@ -38,16 +40,24 @@ export function DashboardHome({ setActiveTab }: { setActiveTab: (tab: string) =>
   const recentLosses = recentResultsData.filter(r => r.outcome === 'loss').length;
 
   const quickLinks = [
-    { id: 'predictions', label: 'All Predictions', desc: `${MOCK_PREDICTIONS.length} active picks`, icon: Target, color: 'from-blue-500 to-blue-700' },
-    { id: 'results', label: 'Results & Slides', desc: `${recentWins}W / ${recentLosses}L this month`, icon: History, color: 'from-emerald-500 to-green-700' },
-    { id: 'premium', label: 'Premium Access', desc: `${STATS.premiumWinRate}% win rate`, icon: Crown, color: 'from-amber-500 to-orange-600' },
-    { id: 'profile', label: 'My Profile', desc: 'Settings & notifications', icon: User, color: 'from-purple-500 to-violet-700' },
-    { id: 'about', label: 'About Us', desc: 'Our team & methodology', icon: Info, color: 'from-slate-500 to-slate-700' },
-    { id: 'contact', label: 'Contact & FAQ', desc: 'Get help from our team', icon: Mail, color: 'from-pink-500 to-rose-600' },
+    { path: '/predictions', label: 'All Predictions', desc: `${MOCK_PREDICTIONS.length} active picks`, icon: Target, color: 'from-blue-500 to-blue-700' },
+    { path: '/results', label: 'Results & Slides', desc: `${recentWins}W / ${recentLosses}L this month`, icon: History, color: 'from-emerald-500 to-green-700' },
+    { path: '/premium', label: 'Premium Access', desc: `${STATS.premiumWinRate}% win rate`, icon: Crown, color: 'from-amber-500 to-orange-600' },
+    { path: '/profile', label: 'My Profile', desc: 'Settings & notifications', icon: User, color: 'from-purple-500 to-violet-700' },
+    { path: '/about', label: 'About Us', desc: 'Our team & methodology', icon: Info, color: 'from-slate-500 to-slate-700' },
+    { path: '/contact', label: 'Contact & FAQ', desc: 'Get help from our team', icon: Mail, color: 'from-pink-500 to-rose-600' },
   ];
 
   return (
     <div className="space-y-8">
+      {/* Demo Banner */}
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+        <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">
+          🎨 <strong>Portfolio Demo:</strong> This is a simulated prediction platform. All predictions shown are for demo purposes.
+          {user?.plan === 'premium' && ' Your premium access is demo-only.'}
+        </p>
+      </div>
+
       {/* Greeting */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -60,7 +70,7 @@ export function DashboardHome({ setActiveTab }: { setActiveTab: (tab: string) =>
         </div>
         {user?.plan === 'premium' && (
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 px-4 py-2 rounded-full text-sm font-semibold">
-            <Crown className="w-4 h-4" /> Premium Member
+            <Crown className="w-4 h-4" /> Premium Demo
           </div>
         )}
       </div>
@@ -131,7 +141,7 @@ export function DashboardHome({ setActiveTab }: { setActiveTab: (tab: string) =>
             <PredictionCard
               key={pred.id}
               prediction={pred}
-              onUpgrade={() => setActiveTab('premium')}
+              onUpgrade={() => navigate('/premium')}
             />
           ))}
         </div>
@@ -143,8 +153,8 @@ export function DashboardHome({ setActiveTab }: { setActiveTab: (tab: string) =>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {quickLinks.map(link => (
             <button
-              key={link.id}
-              onClick={() => setActiveTab(link.id)}
+              key={link.path}
+              onClick={() => navigate(link.path)}
               className="group flex flex-col items-center gap-2 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all"
             >
               <div className={`w-10 h-10 bg-gradient-to-br ${link.color} rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>

@@ -44,7 +44,7 @@ const sections = [
     content: [
       {
         subtitle: 'Third-Party Service Providers',
-        text: 'We share limited data with trusted partners who help us operate our platform: payment processors (Stripe), email providers, and analytics tools. These partners are contractually bound to protect your data.',
+        text: 'In a production app, limited data would be shared with trusted partners: payment processors (Paystack), email providers, and analytics tools. These partners are contractually bound to protect data.',
       },
       {
         subtitle: 'We Never Sell Your Data',
@@ -115,20 +115,26 @@ const sections = [
 export function PrivacyPage() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
+      {/* Demo Banner */}
+      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-center">
+        <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+          📋 <strong>Demo Policy:</strong> This is a template privacy policy for a portfolio project. No real data is collected or stored.
+        </p>
+      </div>
+
       {/* Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-full text-sm font-semibold">
           <Shield className="w-4 h-4" /> Privacy Policy
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-          Your Privacy Matters
+          Data Privacy (Demo Version)
         </h1>
         <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-          At FootyPredict AI, we take data privacy seriously. This policy explains what we collect,
-          how we use it, and your rights as a user.
+          This policy describes how data would be handled in a production environment. Since this is a portfolio demo, no real data collection occurs.
         </p>
         <p className="text-xs text-slate-400">
-          Last updated: January 15, 2025 · Effective: February 1, 2025
+          Last updated: January 15, 2025
         </p>
       </div>
 
@@ -140,11 +146,10 @@ export function PrivacyPage() {
               <Shield className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="font-bold text-slate-900 dark:text-white text-lg mb-2">Our Privacy Commitment</h2>
+              <h2 className="font-bold text-slate-900 dark:text-white text-lg mb-2">About This Policy</h2>
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                We believe in transparency. We collect only what we need, keep it secure, and give you
-                full control over your data. This policy applies to all users of FootyPredict AI and
-                complies with GDPR, UK PECR, and applicable data protection laws.
+                This demo version shows how FootyPredict would handle user data if it were a real production service.
+                In this portfolio project, authentication is session-only (no database), and no personal data is collected, stored, or shared.
               </p>
             </div>
           </div>

@@ -44,11 +44,11 @@ export function DashboardLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
 
-  const getActiveTab = useMemo(() => {
-    const path = location.pathname;
-    if (path === '/') return '/';
-    return path;
-  }, [location.pathname]);
+  const isActive = (path: string) => {
+    if (path === '/' && location.pathname === '/') return true;
+    if (path !== '/' && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   const handleNav = (path: string) => {
     navigate(path);
@@ -57,7 +57,7 @@ export function DashboardLayout() {
 
   const NavItem = ({ item }: { item: { path: string; label: string; icon: React.ElementType; isPremiumCta?: boolean } }) => {
     const Icon = item.icon;
-    const isActive = getActiveTab === item.path || (item.path === '/' && getActiveTab === '/');
+    const active = isActive(item.path);
     const isPremiumCta = item.isPremiumCta && user?.plan !== 'premium';
 
     return (
@@ -65,7 +65,7 @@ export function DashboardLayout() {
         onClick={() => handleNav(item.path)}
         className={clsx(
           'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-          isActive
+          active
             ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-200'
             : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-700/50',
           isPremiumCta && 'text-amber-600 dark:text-amber-500'
@@ -74,7 +74,7 @@ export function DashboardLayout() {
         <Icon className="w-5 h-5 shrink-0" />
         <span className="flex-1 text-left">{item.label}</span>
         {isPremiumCta && <Badge variant="premium">PRO</Badge>}
-        {isActive && !isPremiumCta && <ChevronRight className="w-4 h-4 opacity-50" />}
+        {active && !isPremiumCta && <ChevronRight className="w-4 h-4 opacity-50" />}
       </button>
     );
   };
@@ -86,6 +86,7 @@ export function DashboardLayout() {
         <div
           className="fixed inset-0 z-20 bg-black/50 lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
         />
       )}
 
@@ -99,13 +100,18 @@ export function DashboardLayout() {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-5 border-b border-slate-200 dark:border-slate-700 shrink-0">
           <button
-            onClick={() => handleNav('dashboard')}
+            onClick={() => handleNav('/')}
             className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold text-xl hover:opacity-80 transition-opacity"
+            aria-label="Go to dashboard home"
           >
             <Trophy className="w-6 h-6" />
             <span>FootyPredict</span>
           </button>
-          <button className="lg:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" onClick={() => setIsMobileMenuOpen(false)}>
+          <button
+            className="lg:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close navigation menu"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -116,7 +122,7 @@ export function DashboardLayout() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3 mb-2">Main</p>
             <div className="space-y-0.5">
-              {mainNavItems.map(item => <NavItem key={item.id} item={item} />)}
+              {mainNavItems.map(item => <NavItem key={item.path} item={item} />)}
 
             </div>
           </div>
@@ -125,7 +131,7 @@ export function DashboardLayout() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3 mb-2">Account</p>
             <div className="space-y-0.5">
-              {accountNavItems.map(item => <NavItem key={item.id} item={item} />)}
+              {accountNavItems.map(item => <NavItem key={item.path} item={item} />)}
             </div>
           </div>
 
@@ -140,7 +146,7 @@ export function DashboardLayout() {
             </button>
             {infoOpen && (
               <div className="space-y-0.5">
-                {infoNavItems.map(item => <NavItem key={item.id} item={item} />)}
+                {infoNavItems.map(item => <NavItem key={item.path} item={item} />)}
               </div>
             )}
           </div>
@@ -177,14 +183,22 @@ export function DashboardLayout() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile Header */}
         <header className="h-14 flex items-center justify-between px-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 lg:hidden shrink-0">
-          <button onClick={() => setIsMobileMenuOpen(true)} className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 p-1">
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 p-1"
+            aria-label="Open navigation menu"
+          >
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2 text-blue-600 font-bold">
             <Trophy className="w-5 h-5" />
             FootyPredict
           </div>
-          <button onClick={() => handleNav('profile')} className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold">
+          <button
+            onClick={() => handleNav('profile')}
+            className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold"
+            aria-label={`Open profile for ${user?.name}`}
+          >
             {user?.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
           </button>
         </header>
@@ -192,7 +206,7 @@ export function DashboardLayout() {
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-            {children}
+            <Outlet />
           </div>
         </main>
       </div>

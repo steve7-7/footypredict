@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MOCK_PREDICTIONS } from '../data/mockData';
 import { PredictionCard } from '../components/predictions/PredictionCard';
 import { Button, Card, CardContent, Badge } from '../components/ui';
@@ -8,7 +9,8 @@ import { useAuth } from '../context/AuthContext';
 
 type PredictionT = typeof MOCK_PREDICTIONS[number] & { source?: 'mock' | 'live-api'; federation?: string; market?: string; status?: string };
 
-export function PredictionsList({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+export function PredictionsList() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [filter, setFilter] = useState<'all' | 'free' | 'premium' | 'live'>('all');
   const [selectedFederation, setSelectedFederation] = useState<string>('');
@@ -318,7 +320,7 @@ export function PredictionsList({ setActiveTab }: { setActiveTab: (tab: string) 
                 <p className="text-sm text-amber-800 dark:text-amber-400">Upgrade to Premium to unlock real-time predictions from our RapidAPI feed, plus federation and market filters.</p>
               </div>
             </div>
-            <Button variant="premium" size="sm" onClick={() => setActiveTab('premium')}>Unlock Premium</Button>
+            <Button variant="premium" size="sm" onClick={() => navigate('/premium')}>Unlock Premium</Button>
           </CardContent>
         </Card>
       )}
@@ -335,7 +337,7 @@ export function PredictionsList({ setActiveTab }: { setActiveTab: (tab: string) 
               )}
               <PredictionCard
                 prediction={pred}
-                onUpgrade={() => setActiveTab('premium')}
+                onUpgrade={() => navigate('/premium')}
               />
             </div>
           ))}

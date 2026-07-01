@@ -1,13 +1,24 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { DashboardHome } from './pages/DashboardHome';
-import { PredictionsList } from './pages/PredictionsList';
-import { PremiumUpgrade } from './pages/PremiumUpgrade';
-import { SlideResults } from './pages/SlideResults';
-import { UserProfile } from './pages/UserProfile';
-import { AboutPage } from './pages/AboutPage';
-import { ContactPage } from './pages/ContactPage';
-import { PrivacyPage } from './pages/PrivacyPage';
 import { DashboardLayout } from './components/layout/DashboardLayout';
+import { CardSkeleton } from './components/ui';
+
+const DashboardHome = lazy(() => import('./pages/DashboardHome').then(m => ({ default: m.DashboardHome })));
+const PredictionsList = lazy(() => import('./pages/PredictionsList').then(m => ({ default: m.PredictionsList })));
+const PremiumUpgrade = lazy(() => import('./pages/PremiumUpgrade').then(m => ({ default: m.PremiumUpgrade })));
+const SlideResults = lazy(() => import('./pages/SlideResults').then(m => ({ default: m.SlideResults })));
+const UserProfile = lazy(() => import('./pages/UserProfile').then(m => ({ default: m.UserProfile })));
+const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
+
+const PageLoader = () => (
+  <div className="space-y-4">
+    <CardSkeleton />
+    <CardSkeleton />
+    <CardSkeleton />
+  </div>
+);
 
 export const router = createBrowserRouter([
   {
@@ -16,35 +27,67 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardHome />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <DashboardHome />
+          </Suspense>
+        ),
       },
       {
         path: 'predictions',
-        element: <PredictionsList />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PredictionsList />
+          </Suspense>
+        ),
       },
       {
         path: 'results',
-        element: <SlideResults />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <SlideResults />
+          </Suspense>
+        ),
       },
       {
         path: 'premium',
-        element: <PremiumUpgrade />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PremiumUpgrade />
+          </Suspense>
+        ),
       },
       {
         path: 'profile',
-        element: <UserProfile />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <UserProfile />
+          </Suspense>
+        ),
       },
       {
         path: 'about',
-        element: <AboutPage />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AboutPage />
+          </Suspense>
+        ),
       },
       {
         path: 'contact',
-        element: <ContactPage />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ContactPage />
+          </Suspense>
+        ),
       },
       {
         path: 'privacy',
-        element: <PrivacyPage />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivacyPage />
+          </Suspense>
+        ),
       },
       {
         path: '*',

@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Lock, LockOpen, Info } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-export function PredictionCard({ prediction, onUpgrade }: { prediction: Prediction; onUpgrade: () => void }) {
+export function PredictionCard({ prediction, onUpgrade }: { prediction: Prediction & { source?: 'mock' | 'live-api' }; onUpgrade: () => void }) {
   const { user } = useAuth();
   const isLocked = prediction.isPremium && user?.plan !== 'premium';
 
@@ -21,15 +21,22 @@ export function PredictionCard({ prediction, onUpgrade }: { prediction: Predicti
               {format(new Date(prediction.date), 'MMM d, HH:mm')}
             </div>
           </div>
-          {prediction.isPremium ? (
-            <Badge variant="premium" className="flex items-center gap-1">
-              <Lock className="w-3 h-3" /> Premium
-            </Badge>
-          ) : (
-            <Badge variant="success" className="flex items-center gap-1">
-              <LockOpen className="w-3 h-3" /> Free
-            </Badge>
-          )}
+          <div className="flex flex-col gap-1 items-end">
+            {prediction.source === 'live-api' && (
+              <Badge className="text-xs bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                Live API
+              </Badge>
+            )}
+            {prediction.isPremium ? (
+              <Badge variant="premium" className="flex items-center gap-1">
+                <Lock className="w-3 h-3" /> Premium
+              </Badge>
+            ) : (
+              <Badge variant="success" className="flex items-center gap-1">
+                <LockOpen className="w-3 h-3" /> Free
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* Teams */}

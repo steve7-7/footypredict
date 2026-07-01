@@ -39,16 +39,23 @@ export function ContactPage() {
 
   return (
     <div className="space-y-10 max-w-5xl mx-auto">
+      {/* Demo Banner */}
+      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-center">
+        <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+          📧 <strong>Demo Form:</strong> This contact form doesn't send real emails. It's for demo purposes only.
+        </p>
+      </div>
+
       {/* Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-full text-sm font-semibold">
           <MessageSquare className="w-4 h-4" /> Contact Us
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-          We'd Love to Hear From You
+          Get in Touch
         </h1>
         <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-          Have a question, suggestion, or need support? Our team typically responds within 24 hours.
+          Have a question about this portfolio project? Use the form below.
         </p>
       </div>
 
@@ -85,8 +92,8 @@ export function ContactPage() {
               {submitted ? (
                 <div className="text-center py-8">
                   <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Message Sent!</h3>
-                  <p className="text-slate-500">Thanks for reaching out. We'll get back to you within 24 hours.</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Demo Submitted!</h3>
+                  <p className="text-slate-500">In a real app, your message would be sent. This is a portfolio demo.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
