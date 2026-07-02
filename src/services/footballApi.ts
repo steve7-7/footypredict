@@ -3,7 +3,7 @@
 
 import { corsFetch } from './apiClient';
 
-const API_KEY = 'b9c6883414msh11dde2eba098703p1a13fdjsne11249e78db1';
+const API_KEY = 'c9915d83c2msh236537aa338a7a9p11aab4jsn55d67c96e334';
 const API_HOST = 'football-prediction-api.p.rapidapi.com';
 const BASE_URL = 'https://football-prediction-api.p.rapidapi.com/api/v2';
 
