@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '../components/ui';
 import { Check, Crown, Zap, ShieldCheck, CreditCard, ExternalLink, RefreshCw, Lock } from 'lucide-react';
@@ -20,8 +21,9 @@ const CURRENCIES = [
   { code: 'KES', symbol: 'KSh', price: 50, amountInKobo: 5000 }, // Cents
 ];
 
-export function PremiumUpgrade({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+export function PremiumUpgrade() {
   const { user, upgrade } = useAuth();
+  const navigate = useNavigate();
   const [selectedCurrency, setSelectedCurrency] = useState(CURRENCIES[0]);
   const [loadingPaystack, setLoadingPaystack] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -77,7 +79,7 @@ export function PremiumUpgrade({ setActiveTab }: { setActiveTab: (tab: string) =
         )}
 
         <div>
-          <Button onClick={() => setActiveTab('predictions')} size="lg" className="shadow-lg">
+          <Button onClick={() => navigate('/predictions')} size="lg" className="shadow-lg">
             View Live Premium Picks
           </Button>
         </div>

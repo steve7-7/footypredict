@@ -131,7 +131,7 @@ export function DashboardHome() {
               ) : null
             )}
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setActiveTab('predictions')} className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/predictions')} className="flex items-center gap-1">
             View All <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
@@ -192,7 +192,7 @@ export function DashboardHome() {
                 </div>
               ))}
             </div>
-            <Button variant="ghost" size="sm" className="w-full mt-3 text-blue-600 dark:text-blue-400" onClick={() => setActiveTab('results')}>
+            <Button variant="ghost" size="sm" className="w-full mt-3 text-blue-600 dark:text-blue-400" onClick={() => navigate('/results')}>
               View All Results <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
           </CardContent>
@@ -216,7 +216,7 @@ export function DashboardHome() {
                 </div>
               ))}
             </div>
-            <Button variant="ghost" size="sm" className="w-full mt-3 text-blue-600 dark:text-blue-400" onClick={() => setActiveTab('about')}>
+            <Button variant="ghost" size="sm" className="w-full mt-3 text-blue-600 dark:text-blue-400" onClick={() => navigate('/about')}>
               Learn More <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
           </CardContent>
@@ -238,7 +238,7 @@ export function DashboardHome() {
                 Get access to our highest confidence picks, detailed match analysis, and exclusive leagues. Premium members see an average ROI of +{STATS.monthlyROI}%.
               </p>
             </div>
-            <Button variant="premium" size="lg" className="shrink-0" onClick={() => setActiveTab('premium')}>
+            <Button variant="premium" size="lg" className="shrink-0" onClick={() => navigate('/premium')}>
               Upgrade Now <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </CardContent>

@@ -160,7 +160,7 @@ export function SlideResults() {
         {!canUseLive && (
           <div className="flex items-center gap-2 text-sm bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800">
             <span>🔒 Live results from Betigolo API are Premium only</span>
-            <Button variant="premium" size="sm" onClick={() => setActiveTab('premium')}>Upgrade</Button>
+            <Button variant="premium" size="sm" onClick={() => navigate('/premium')}>Upgrade</Button>
           </div>
         )}
       </div>
