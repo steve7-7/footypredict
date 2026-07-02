@@ -101,9 +101,71 @@ export async function getPreviousResults(): Promise<{
   };
 }
 
+// Map of common team name variations to proper team names
+const TEAM_NAME_MAP: Record<string, string> = {
+  'man united': 'Manchester United',
+  'manchester united': 'Manchester United',
+  'man city': 'Manchester City',
+  'manchester city': 'Manchester City',
+  'newcastle': 'Newcastle United',
+  'newcastle united': 'Newcastle United',
+  'arsenal': 'Arsenal',
+  'liverpool': 'Liverpool',
+  'chelsea': 'Chelsea',
+  'tottenham': 'Tottenham Hotspur',
+  'real madrid': 'Real Madrid',
+  'barcelona': 'Barcelona',
+  'atletico madrid': 'Atlético Madrid',
+  'sevilla': 'Sevilla',
+  'valencia': 'Valencia',
+  'real sociedad': 'Real Sociedad',
+  'napoli': 'Napoli',
+  'inter': 'Inter Milan',
+  'inter milan': 'Inter Milan',
+  'juventus': 'Juventus',
+  'ac milan': 'AC Milan',
+  'roma': 'Roma',
+  'lazio': 'Lazio',
+  'atalanta': 'Atalanta',
+  'fiorentina': 'Fiorentina',
+  'bayern': 'Bayern Munich',
+  'bayern munich': 'Bayern Munich',
+  'dortmund': 'Borussia Dortmund',
+  'borussia dortmund': 'Borussia Dortmund',
+  'leipzig': 'RB Leipzig',
+  'rb leipzig': 'RB Leipzig',
+  'leverkusen': 'Bayer Leverkusen',
+  'bayer leverkusen': 'Bayer Leverkusen',
+  'wolfsburg': 'VfL Wolfsburg',
+  'hamburg': 'Hamburger SV',
+  'cologne': 'Cologne',
+  'fc koln': 'Cologne',
+  'psg': 'Paris Saint-Germain',
+  'paris': 'Paris Saint-Germain',
+  'paris saint-germain': 'Paris Saint-Germain',
+  'monaco': 'AS Monaco',
+  'lyon': 'Olympique Lyonnais',
+  'olympique lyonnais': 'Olympique Lyonnais',
+  'marseille': 'Olympique Marseille',
+  'olympique marseille': 'Olympique Marseille',
+  'nice': 'OGC Nice',
+  'rennes': 'Stade Rennes',
+  'lille': 'Lille',
+};
+
+function normalizeTeamName(teamName: string): string {
+  if (!teamName) return teamName;
+  const normalized = teamName.toLowerCase().trim();
+  return TEAM_NAME_MAP[normalized] || teamName;
+}
+
 export function normalizeBetigoloResult(r: BetigoloResult, index: number) {
-  const homeTeam = r.home_team || r.home || 'Home Team';
-  const awayTeam = r.away_team || r.away || 'Away Team';
+  let homeTeam = r.home_team || r.home || '';
+  let awayTeam = r.away_team || r.away || '';
+
+  // Normalize team names to proper format
+  homeTeam = normalizeTeamName(homeTeam) || 'Home Team';
+  awayTeam = normalizeTeamName(awayTeam) || 'Away Team';
 
   const homeScore = Number(r.home_score ?? r.score_home ?? 0);
   const awayScore = Number(r.away_score ?? r.score_away ?? 0);
