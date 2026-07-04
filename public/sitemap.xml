@@ -3,31 +3,39 @@
   <!-- Homepage -->
   <url>
     <loc>https://footypredict.ai/</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Dashboard -->
-  <url>
-    <loc>https://footypredict.ai/dashboard</loc>
-    <lastmod>2024-01-15</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Predictions -->
+  <!-- All Predictions -->
   <url>
     <loc>https://footypredict.ai/predictions</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- Results & Performance -->
+  <url>
+    <loc>https://footypredict.ai/results</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Past Predictions History -->
+  <url>
+    <loc>https://footypredict.ai/past-predictions</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Premium Upgrade -->
   <url>
-    <loc>https://footypredict.ai/upgrade</loc>
-    <lastmod>2024-01-15</lastmod>
+    <loc>https://footypredict.ai/premium</loc>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -35,23 +43,15 @@
   <!-- User Profile -->
   <url>
     <loc>https://footypredict.ai/profile</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-
-  <!-- Results/Slide Results -->
-  <url>
-    <loc>https://footypredict.ai/results</loc>
-    <lastmod>2024-01-15</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
   </url>
 
   <!-- About Page -->
   <url>
     <loc>https://footypredict.ai/about</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -59,7 +59,7 @@
   <!-- Contact Page -->
   <url>
     <loc>https://footypredict.ai/contact</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -67,7 +67,7 @@
   <!-- Privacy Policy -->
   <url>
     <loc>https://footypredict.ai/privacy</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
