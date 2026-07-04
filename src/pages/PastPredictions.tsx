@@ -712,3 +712,5 @@ export function PastPredictions() {
     </div>
   );
 }
+
+export default PastPredictions;
