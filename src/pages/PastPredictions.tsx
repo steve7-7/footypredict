@@ -84,7 +84,9 @@ export function PastPredictions() {
       );
       setMatches(sorted);
     } catch (err) {
+      console.error('Failed to fetch history:', err);
       setError(err instanceof Error ? err.message : "Failed to fetch history");
+      setMatches([]);
     } finally {
       setLoading(false);
     }
