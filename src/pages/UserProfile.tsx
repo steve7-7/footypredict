@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '../components/ui';
 import { format } from 'date-fns';
@@ -9,7 +10,8 @@ import {
 import { MOCK_RESULTS } from '../data/mockData';
 import { getPreviousResults, normalizeBetigoloResult } from '../services/betigoloApi';
 
-export function UserProfile({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+export function UserProfile() {
+  const navigate = useNavigate();
   const { user, updateProfile } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState({
@@ -116,7 +118,7 @@ export function UserProfile({ setActiveTab }: { setActiveTab: (tab: string) => v
                 Member since {format(new Date(user.joinDate), 'MMMM yyyy')}
               </p>
               {user.plan !== 'premium' && (
-                <Button variant="premium" size="sm" className="w-full mt-4" onClick={() => setActiveTab('premium')}>
+                <Button variant="premium" size="sm" className="w-full mt-4" onClick={() => navigate('/premium')}>
                   <Crown className="w-4 h-4 mr-2" /> Upgrade to Premium
                 </Button>
               )}
