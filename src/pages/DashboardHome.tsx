@@ -50,14 +50,6 @@ export function DashboardHome() {
 
   return (
     <div className="space-y-8">
-      {/* Demo Banner */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
-        <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">
-          🎨 <strong>Portfolio Demo:</strong> This is a simulated prediction platform. All predictions shown are for demo purposes.
-          {user?.plan === 'premium' && ' Your premium access is demo-only.'}
-        </p>
-      </div>
-
       {/* Greeting */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
