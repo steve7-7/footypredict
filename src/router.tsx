@@ -11,6 +11,7 @@ const UserProfile = lazy(() => import('./pages/UserProfile').then(m => ({ defaul
 const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })));
 const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
+const PastPredictions = lazy(() => import('./pages/PastPredictions').then(m => ({ default: m.PastPredictions })));
 
 const PageLoader = () => (
   <div className="space-y-4">
@@ -86,6 +87,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <PrivacyPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'past-predictions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PastPredictions />
           </Suspense>
         ),
       },
