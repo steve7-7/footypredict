@@ -24,6 +24,7 @@ const mainNavItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/predictions', label: 'All Predictions', icon: Target },
   { path: '/results', label: 'Results & Slides', icon: History },
+  { path: '/past-predictions', label: 'Past Predictions', icon: Trophy },
   { path: '/premium', label: 'Premium Access', icon: Crown, isPremiumCta: true },
 ];
 
