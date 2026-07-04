@@ -44,43 +44,47 @@ export async function corsFetch<T = any>(
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 4500);
-    const response = await fetch(targetUrl, {
-      method: 'GET',
-      headers,
-      signal: controller.signal,
-      mode: 'cors',
-    });
-    clearTimeout(timeoutId);
-    const text = await response.text();
-    const responseHeaders: Record<string, string> = {};
-    response.headers.forEach((v, k) => { responseHeaders[k] = v; });
-
     try {
-      const data = JSON.parse(text);
-      return {
-        data,
-        rawText: text,
-        error: null,
-        proxy: 'direct',
-        status: response.status,
-        url: targetUrl,
-        headersSent: headers,
-        responseHeaders,
-        durationMs: Date.now() - startAll,
-      };
-    } catch {
-      // Non-JSON but still return raw
-      return {
-        data: null,
-        rawText: text,
-        error: `Direct fetch returned non-JSON (HTTP ${response.status})`,
-        proxy: 'direct',
-        status: response.status,
-        url: targetUrl,
-        headersSent: headers,
-        responseHeaders,
-        durationMs: Date.now() - startAll,
-      };
+      const response = await fetch(targetUrl, {
+        method: 'GET',
+        headers,
+        signal: controller.signal,
+        mode: 'cors',
+      });
+      clearTimeout(timeoutId);
+      const text = await response.text();
+      const responseHeaders: Record<string, string> = {};
+      response.headers.forEach((v, k) => { responseHeaders[k] = v; });
+
+      try {
+        const data = JSON.parse(text);
+        return {
+          data,
+          rawText: text,
+          error: null,
+          proxy: 'direct',
+          status: response.status,
+          url: targetUrl,
+          headersSent: headers,
+          responseHeaders,
+          durationMs: Date.now() - startAll,
+        };
+      } catch {
+        // Non-JSON but still return raw
+        return {
+          data: null,
+          rawText: text,
+          error: `Direct fetch returned non-JSON (HTTP ${response.status})`,
+          proxy: 'direct',
+          status: response.status,
+          url: targetUrl,
+          headersSent: headers,
+          responseHeaders,
+          durationMs: Date.now() - startAll,
+        };
+      }
+    } finally {
+      clearTimeout(timeoutId);
     }
   } catch (e: any) {
     attempts.push({ proxy: 'direct', error: e?.name === 'AbortError' ? 'timeout' : 'CORS / network blocked' });

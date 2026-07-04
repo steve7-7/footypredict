@@ -37,34 +37,38 @@ export function PredictionsList() {
     setApiFailed(false);
     setApiError(null);
     try {
-      const [predsRes, fedsRes, mrktsRes] = await Promise.all([
+      const [predsRes, fedsRes, mrktsRes] = await Promise.allSettled([
         getPredictions({ market: selectedMarket, iso_date: selectedDate, federation: selectedFederation || undefined }),
         getFederations(),
         getMarkets(),
       ]);
 
-      if (predsRes.data && predsRes.data.length > 0) {
-        const normalized = predsRes.data.map((p, i) => normalizeApiPrediction(p, i));
+      const predsData = predsRes.status === 'fulfilled' ? predsRes.value : { data: null, error: 'Request failed' };
+      const fedsData = fedsRes.status === 'fulfilled' ? fedsRes.value : { data: null, error: 'Request failed' };
+      const mrktsData = mrktsRes.status === 'fulfilled' ? mrktsRes.value : { data: null, error: 'Request failed' };
+
+      if (predsData.data && predsData.data.length > 0) {
+        const normalized = predsData.data.map((p, i) => normalizeApiPrediction(p, i));
         setLivePredictions(normalized);
         setLiveCount(normalized.length);
       } else {
         setApiFailed(true);
-        if (predsRes.error) setApiError(predsRes.error);
+        if (predsData.error) setApiError(predsData.error);
         setLivePredictions([]);
         setLiveCount(0);
       }
 
-      if ((predsRes as any).rawResponse) {
-        setLastRawResponse((predsRes as any).rawResponse);
+      if ((predsData as any).rawResponse) {
+        setLastRawResponse((predsData as any).rawResponse);
         setLastApiMeta({
           endpoint: `predictions?market=${selectedMarket}&iso_date=${selectedDate}${selectedFederation ? `&federation=${selectedFederation}` : ''}`,
           proxy: 'cors-proxy'
         });
       }
 
-      if (fedsRes.data) {
+      if (fedsData.data) {
         setFederations(
-          fedsRes.data
+          fedsData.data
             .map(f => ({
               key: f.federation || f.key || f.name || '',
               name: f.name || f.federation || f.key || '',
@@ -72,9 +76,9 @@ export function PredictionsList() {
             .filter(f => f.key)
         );
       }
-      if (mrktsRes.data) {
+      if (mrktsData.data) {
         setMarkets(
-          mrktsRes.data
+          mrktsData.data
             .map(m => ({
               key: m.market || m.key || m.name || '',
               name: m.name || m.market || m.key || '',
@@ -83,8 +87,11 @@ export function PredictionsList() {
         );
       }
     } catch (e: any) {
+      console.error('API fetch error:', e);
       setApiFailed(true);
-      setApiError(e?.message || 'Unknown error');
+      setApiError(e?.message || 'Failed to fetch live predictions. Showing cached data.');
+      setLivePredictions([]);
+      setLiveCount(0);
     } finally {
       setLoading(false);
     }
