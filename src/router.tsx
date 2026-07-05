@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { CardSkeleton } from './components/ui';
+import { ErrorPage } from './pages/ErrorPage';
 
 const DashboardHome = lazy(() => import('./pages/DashboardHome').then(m => ({ default: m.DashboardHome })));
 const PredictionsList = lazy(() => import('./pages/PredictionsList').then(m => ({ default: m.PredictionsList })));
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <DashboardLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -32,6 +34,7 @@ export const router = createBrowserRouter([
             <DashboardHome />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: 'predictions',
@@ -40,6 +43,7 @@ export const router = createBrowserRouter([
             <PredictionsList />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: 'results',
@@ -48,6 +52,7 @@ export const router = createBrowserRouter([
             <SlideResults />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: 'premium',
@@ -56,6 +61,7 @@ export const router = createBrowserRouter([
             <PremiumUpgrade />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: 'profile',
@@ -64,6 +70,7 @@ export const router = createBrowserRouter([
             <UserProfile />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: 'about',
@@ -72,6 +79,7 @@ export const router = createBrowserRouter([
             <AboutPage />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: 'contact',
@@ -80,6 +88,7 @@ export const router = createBrowserRouter([
             <ContactPage />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: 'privacy',
@@ -88,6 +97,7 @@ export const router = createBrowserRouter([
             <PrivacyPage />
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
       },
       {
         path: '*',
