@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MOCK_RESULTS, STATS } from '../data/mockData';
 import { Card, CardContent, Badge, Button } from '../components/ui';
@@ -10,9 +10,8 @@ import {
   Server, Globe, Key
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getPreviousResults, normalizeBetigoloResult } from '../services/betigoloApi';
 
-type ResultT = typeof MOCK_RESULTS[number] & { source?: 'mock' | 'betigolo-api' };
+type ResultT = typeof MOCK_RESULTS[number] & { source?: 'mock' };
 
 export function SlideResults() {
   const navigate = useNavigate();

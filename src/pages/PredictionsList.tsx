@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { MOCK_PREDICTIONS } from '../data/mockData';
 import { PredictionCard } from '../components/predictions/PredictionCard';
 import { Button, Card, CardContent, Badge } from '../components/ui';
-import { getPredictions, getFederations, getMarkets, normalizeApiPrediction } from '../services/footballApi';
 import { RefreshCw, WifiOff, Wifi, Calendar, Globe2, Filter, Target, Code, Copy, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 

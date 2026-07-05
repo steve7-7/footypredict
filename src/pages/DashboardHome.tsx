@@ -1,36 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { MOCK_PREDICTIONS, MOCK_RESULTS, STATS, type Prediction } from '../data/mockData';
 import { PredictionCard } from '../components/predictions/PredictionCard';
 import { Card, CardContent, Button, Badge } from '../components/ui';
-import { getPredictions, normalizeApiPrediction } from '../services/footballApi';
 import {
   TrendingUp, Activity, CheckCircle, History, User,
-  Target, Crown, Info, Mail, Shield, ArrowRight, Wifi, RefreshCw
+  Target, Crown, Info, Mail, Shield, ArrowRight
 } from 'lucide-react';
 
 export function DashboardHome() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [livePicks, setLivePicks] = useState<Prediction[]>([]);
-  const [liveLoading, setLiveLoading] = useState(false);
-
-  useEffect(() => {
-    if (user?.plan === 'premium') {
-      setLiveLoading(true);
-      getPredictions({ market: 'classic' }).then(res => {
-        if (res.data && res.data.length > 0) {
-          setLivePicks(res.data.slice(0, 3).map((p, i) => normalizeApiPrediction(p, i)));
-        }
-        setLiveLoading(false);
-      });
-    }
-  }, [user?.plan]);
-
-  const todayPredictions: Prediction[] = user?.plan === 'premium' && livePicks.length > 0
-    ? livePicks
-    : MOCK_PREDICTIONS.slice(0, 3);
+  const todayPredictions: Prediction[] = MOCK_PREDICTIONS.slice(0, 3);
   const winRate = user?.plan === 'premium' ? `${STATS.premiumWinRate}%` : `${STATS.freeWinRate}%`;
   const profit = user?.plan === 'premium' ? '+45.2 U' : '+12.5 U';
 
@@ -115,22 +97,9 @@ export function DashboardHome() {
       {/* Today's Picks */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-              {user?.plan === 'premium' && livePicks.length > 0 ? '⚡ Live API Picks' : '🔥 Today\'s Top Picks'}
-            </h2>
-            {user?.plan === 'premium' && (
-              liveLoading ? (
-                <Badge variant="default" className="flex items-center gap-1">
-                  <RefreshCw className="w-3 h-3 animate-spin" /> Loading
-                </Badge>
-              ) : livePicks.length > 0 ? (
-                <Badge variant="success" className="flex items-center gap-1">
-                  <Wifi className="w-3 h-3" /> Live
-                </Badge>
-              ) : null
-            )}
-          </div>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+          🔥 Today&apos;s Top Picks
+        </h2>
           <Button variant="ghost" size="sm" onClick={() => navigate('/predictions')} className="flex items-center gap-1">
             View All <ArrowRight className="w-4 h-4" />
           </Button>
