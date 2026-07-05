@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Lock, LockOpen, Info } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-export function PredictionCard({ prediction, onUpgrade }: { prediction: Prediction & { source?: 'mock' | 'live-api' | 'betigolo-api' }; onUpgrade: () => void }) {
+export function PredictionCard({ prediction, onUpgrade }: { prediction: Prediction & { source?: 'mock' | 'live-api' }; onUpgrade: () => void }) {
   const { user } = useAuth();
   const isLocked = prediction.isPremium && user?.plan !== 'premium';
 
@@ -44,25 +44,11 @@ export function PredictionCard({ prediction, onUpgrade }: { prediction: Predicti
           <div className="flex flex-col items-center flex-1">
             <img src={prediction.homeLogo} alt={prediction.homeTeam} className="w-12 h-12 object-contain mb-2" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/48?text=' + prediction.homeTeam[0]; }} />
             <span className="text-sm font-semibold text-center leading-tight">{prediction.homeTeam}</span>
-            {prediction.source === 'betigolo-api' && prediction.homeScore !== undefined && (
-              <span className="text-xl font-bold text-slate-900 dark:text-white mt-1">{prediction.homeScore}</span>
-            )}
           </div>
-          <div className="px-4 text-center">
-            {prediction.source === 'betigolo-api' && prediction.homeScore !== undefined ? (
-              <div className="text-slate-400 font-medium text-sm">
-                <span className="text-sm">VS</span>
-              </div>
-            ) : (
-              <div className="text-slate-400 font-medium text-sm">VS</div>
-            )}
-          </div>
+          <div className="px-4 text-slate-400 font-medium text-sm">VS</div>
           <div className="flex flex-col items-center flex-1">
             <img src={prediction.awayLogo} alt={prediction.awayTeam} className="w-12 h-12 object-contain mb-2" onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/48?text=' + prediction.awayTeam[0]; }} />
             <span className="text-sm font-semibold text-center leading-tight">{prediction.awayTeam}</span>
-            {prediction.source === 'betigolo-api' && prediction.awayScore !== undefined && (
-              <span className="text-xl font-bold text-slate-900 dark:text-white mt-1">{prediction.awayScore}</span>
-            )}
           </div>
         </div>
 
@@ -90,38 +76,12 @@ export function PredictionCard({ prediction, onUpgrade }: { prediction: Predicti
                   <span className="text-sm font-semibold">{prediction.odds}</span>
                 </div>
                 <div className="flex flex-col items-end">
-                  <span className="text-xs text-slate-500">
-                    {prediction.source === 'betigolo-api' ? 'Result' : 'Confidence'}
-                  </span>
-                  {prediction.source === 'betigolo-api' && prediction.outcome ? (
-                    <span className={`text-sm font-semibold ${
-                      prediction.outcome === 'win'
-                        ? 'text-emerald-600 dark:text-emerald-400'
-                        : prediction.outcome === 'loss'
-                        ? 'text-rose-600 dark:text-rose-400'
-                        : 'text-amber-600 dark:text-amber-400'
-                    }`}>
-                      {prediction.outcome === 'win' ? '✓ Win' : prediction.outcome === 'loss' ? '✗ Loss' : '→ Push'}
-                    </span>
-                  ) : (
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{prediction.confidence}%</span>
-                    </div>
-                  )}
+                  <span className="text-xs text-slate-500">Confidence</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{prediction.confidence}%</span>
+                  </div>
                 </div>
               </div>
-              {prediction.source === 'betigolo-api' && prediction.profit && (
-                <div className="flex justify-between items-center px-1 pt-2">
-                  <span className="text-xs text-slate-500">Profit/Loss:</span>
-                  <span className={`text-sm font-semibold ${
-                    prediction.outcome === 'win'
-                      ? 'text-emerald-600 dark:text-emerald-400'
-                      : 'text-rose-600 dark:text-rose-400'
-                  }`}>
-                    {prediction.profit}
-                  </span>
-                </div>
-              )}
               {prediction.rationale && (
                 <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 p-2 rounded flex items-start gap-2">
                   <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />

@@ -3,33 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { MOCK_PREDICTIONS } from '../data/mockData';
 import { PredictionCard } from '../components/predictions/PredictionCard';
 import { Button, Card, CardContent, Badge } from '../components/ui';
-import { getPredictions, getFederations, getMarkets, normalizeApiPrediction } from '../services/footballApi';
-import { getPreviousResults, normalizeBetigoloResult } from '../services/betigoloApi';
-import { RefreshCw, WifiOff, Wifi, Calendar, Globe2, Filter, Target, Code, Copy, Check, Clock } from 'lucide-react';
+import { RefreshCw, WifiOff, Wifi, Calendar, Globe2, Filter, Target, Code, Copy, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-type PredictionT = typeof MOCK_PREDICTIONS[number] & { source?: 'mock' | 'live-api' | 'betigolo-api'; federation?: string; market?: string; status?: string };
+type PredictionT = typeof MOCK_PREDICTIONS[number] & { source?: 'mock' | 'live-api'; federation?: string; market?: string; status?: string };
 
 export function PredictionsList() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [filter, setFilter] = useState<'all' | 'free' | 'premium' | 'live' | 'results'>('all');
+  const [filter, setFilter] = useState<'all' | 'free' | 'premium' | 'live'>('all');
   const [selectedFederation, setSelectedFederation] = useState<string>('');
   const [selectedMarket, setSelectedMarket] = useState<string>('classic');
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
   const [livePredictions, setLivePredictions] = useState<PredictionT[]>([]);
-  const [betigoloResults, setBetigoloResults] = useState<PredictionT[]>([]);
   const [federations, setFederations] = useState<{ key: string; name: string }[]>([]);
   const [markets, setMarkets] = useState<{ key: string; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
-  const [betigoloLoading, setBetigoloLoading] = useState(false);
   const [apiFailed, setApiFailed] = useState(false);
-  const [betigoloFailed, setBetigoloFailed] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [betigoloError, setBetigoloError] = useState<string | null>(null);
   const [liveCount, setLiveCount] = useState(0);
-  const [betigoloCount, setBetigoloCount] = useState(0);
 
   // API Response inspector
   const [showApiResponse, setShowApiResponse] = useState(false);
@@ -96,35 +89,8 @@ export function PredictionsList() {
     }
   };
 
-  const fetchBetigolo = async () => {
-    if (user?.plan !== 'premium') return;
-    setBetigoloLoading(true);
-    setBetigoloFailed(false);
-    setBetigoloError(null);
-    try {
-      const res = await getPreviousResults();
-      
-      if (res.data && res.data.length > 0) {
-        const normalized = res.data.map((r, i) => normalizeBetigoloResult(r, i) as PredictionT);
-        setBetigoloResults(normalized);
-        setBetigoloCount(normalized.length);
-      } else {
-        setBetigoloFailed(true);
-        if (res.error) setBetigoloError(res.error);
-        setBetigoloResults([]);
-        setBetigoloCount(0);
-      }
-    } catch (e: any) {
-      setBetigoloFailed(true);
-      setBetigoloError(e?.message || 'Unknown error');
-    } finally {
-      setBetigoloLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchLive();
-    fetchBetigolo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.plan]);
 
@@ -136,9 +102,7 @@ export function PredictionsList() {
   const allPredictions = useMemo<PredictionT[]>(() => {
     let combined: PredictionT[] = [];
 
-    if (filter === 'results') {
-      combined = betigoloResults;
-    } else if (filter === 'live') {
+    if (filter === 'live') {
       combined = livePredictions;
     } else if (filter === 'premium') {
       combined = [
@@ -151,12 +115,11 @@ export function PredictionsList() {
       combined = [
         ...livePredictions,
         ...mockPredictions,
-        ...betigoloResults,
       ];
     }
 
     return combined;
-  }, [filter, livePredictions, mockPredictions, betigoloResults]);
+  }, [filter, livePredictions, mockPredictions]);
 
   const canSeeLive = user?.plan === 'premium';
 
@@ -187,17 +150,7 @@ export function PredictionsList() {
             className="flex items-center gap-2"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            {loading ? 'Loading...' : 'Refresh Live'}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchBetigolo}
-            disabled={betigoloLoading || !canSeeLive}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${betigoloLoading ? 'animate-spin' : ''}`} />
-            {betigoloLoading ? 'Loading...' : 'Refresh Results'}
+            {loading ? 'Loading...' : 'Refresh'}
           </Button>
           {lastRawResponse && canSeeLive && (
             <Button
@@ -254,7 +207,6 @@ export function PredictionsList() {
           { id: 'free', label: 'Free', count: mockPredictions.filter(p => !p.isPremium).length },
           { id: 'premium', label: 'Premium', count: mockPredictions.filter(p => p.isPremium).length + liveCount },
           { id: 'live', label: 'Live API', count: liveCount, premiumOnly: true },
-          { id: 'results', label: 'Past Results', count: betigoloCount, premiumOnly: true },
         ].map(f => {
           const isLocked = (f as any).premiumOnly && !canSeeLive;
           return (
@@ -354,16 +306,6 @@ export function PredictionsList() {
         </div>
       )}
 
-      {/* Betigolo Results status banner */}
-      {canSeeLive && (
-        <div className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm ${betigoloFailed ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-800' : 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border border-green-200 dark:border-green-800'}`}>
-          {betigoloFailed
-            ? <><WifiOff className="w-4 h-4" /> Could not reach Betigolo API{betigoloError ? `: ${betigoloError}` : ''}. Past results may not be available.</>
-            : <><Clock className="w-4 h-4" /> Connected to Betigolo API · {betigoloCount} past results loaded.</>
-          }
-        </div>
-      )}
-
       {/* Live locked banner for free users */}
       {!canSeeLive && filter === 'all' && (
         <Card className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-amber-200 dark:border-amber-800">
@@ -392,11 +334,6 @@ export function PredictionsList() {
                   <Badge variant="premium" className="shadow-lg">⚡ LIVE API</Badge>
                 </div>
               )}
-              {pred.source === 'betigolo-api' && (
-                <div className="absolute -top-2 -right-2 z-10">
-                  <Badge className="shadow-lg bg-emerald-600 hover:bg-emerald-700">📊 PAST RESULT</Badge>
-                </div>
-              )}
               <PredictionCard
                 prediction={pred}
                 onUpgrade={() => navigate('/premium')}
@@ -416,10 +353,6 @@ export function PredictionsList() {
                 ? apiFailed
                   ? 'The live API is currently unreachable from this browser. Please try refreshing, or check your filters.'
                   : 'No live predictions match your selected filters. Try a different date or federation.'
-                : filter === 'results' && canSeeLive
-                ? betigoloFailed
-                  ? 'The Betigolo API is currently unreachable. Please try refreshing.'
-                  : 'No past results are available. Try refreshing.'
                 : 'Try adjusting your filters.'}
             </p>
             <Button size="sm" onClick={() => { setFilter('all'); setSelectedFederation(''); }}>Reset Filters</Button>

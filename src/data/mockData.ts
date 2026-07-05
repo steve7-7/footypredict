@@ -12,14 +12,10 @@ export type Prediction = {
   odds: string;
   isPremium: boolean;
   rationale?: string;
-  source?: 'mock' | 'live-api' | 'betigolo-api';
+  source?: 'mock' | 'live-api';
   federation?: string;
   market?: string;
   status?: string;
-  homeScore?: number;
-  awayScore?: number;
-  outcome?: 'win' | 'loss' | 'push';
-  profit?: string;
 };
 
 export type Result = {

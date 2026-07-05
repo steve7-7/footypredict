@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '../components/ui';
 import { format } from 'date-fns';
@@ -7,7 +7,6 @@ import {
   CheckCircle2, XCircle, Edit3, Save, X, Camera, Lock, AlertCircle
 } from 'lucide-react';
 import { MOCK_RESULTS } from '../data/mockData';
-import { getPreviousResults, normalizeBetigoloResult } from '../services/betigoloApi';
 
 export function UserProfile({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const { user, updateProfile } = useAuth();
