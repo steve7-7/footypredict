@@ -225,7 +225,13 @@ export function PastPredictions() {
       setError(null);
       const res = await fetch("/api/betigolo-history");
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      const data: HistoryMatch[] = await res.json();
+
+      const text = await res.text();
+      if (!text.trim().startsWith('[') && !text.trim().startsWith('{')) {
+        throw new Error("API returned invalid response (not JSON)");
+      }
+
+      const data: HistoryMatch[] = JSON.parse(text);
       const sorted = [...data].sort(
         (a, b) =>
           new Date(b.match_dat).getTime() - new Date(a.match_dat).getTime(),
@@ -235,7 +241,7 @@ export function PastPredictions() {
       console.error('Failed to fetch history, using mock data:', err);
       const mockData = getMockHistoryData();
       setMatches(mockData);
-      setError("Using demo data. Connect to Vercel to see live predictions.");
+      setError("Using demo data. Deploy to Vercel with RAPIDAPI_KEY to see live predictions.");
     } finally {
       setLoading(false);
     }
