@@ -16,7 +16,7 @@ import {
   ChevronUp,
   Trophy,
   Grid3x3,
-  LayoutTable,
+  Table2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MarketingBanner } from "../components/MarketingBanner";
@@ -398,7 +398,7 @@ export function PastPredictions() {
                     : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                 }`}
               >
-                <LayoutTable className="w-4 h-4" />
+                <Table2 className="w-4 h-4" />
                 Table
               </button>
             </div>
