@@ -5,49 +5,60 @@ export function PremiumBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const showTimer = setInterval(() => {
       setVisible(true);
+      const hideTimer = setTimeout(() => {
+        setVisible(false);
+      }, 5000);
+      return () => clearTimeout(hideTimer);
     }, 30000);
 
-    return () => clearTimeout(timer);
+    const initialTimer = setTimeout(() => {
+      setVisible(true);
+      const hideTimer = setTimeout(() => {
+        setVisible(false);
+      }, 5000);
+      return () => clearTimeout(hideTimer);
+    }, 30000);
+
+    return () => {
+      clearInterval(showTimer);
+      clearTimeout(initialTimer);
+    };
   }, []);
 
   if (!visible) return null;
 
   return (
-    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl">
-      <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-700 rounded-2xl shadow-2xl">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 px-6 py-4">
+    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+      <div className="bg-gradient-to-r from-amber-400 to-yellow-300 backdrop-blur-xl border border-amber-500 rounded-xl shadow-2xl">
+        <div className="flex items-center justify-between gap-3 px-4 py-3">
           {/* Left */}
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/20">
-              <Crown className="h-7 w-7 text-yellow-400" />
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold text-white">
-                Unlock Premium Predictions
-              </h3>
-
-              <p className="text-sm text-zinc-400">
-                Get AI predictions, Correct Score tips, BTTS, Over/Under,
-                Value Bets, and Ad-Free experience.
+          <div className="flex items-center gap-3">
+            <Crown className="h-5 w-5 text-amber-900 flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-amber-900">
+                Unlock Premium
+              </p>
+              <p className="text-xs text-amber-800">
+                Get exclusive predictions & tips
               </p>
             </div>
           </div>
 
           {/* Right */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               className="
-                rounded-xl
-                bg-green-500
-                px-6
-                py-3
+                rounded-lg
+                bg-amber-900
+                px-4
+                py-2
+                text-xs
                 font-semibold
-                text-white
+                text-amber-50
                 transition
-                hover:bg-green-400
+                hover:bg-amber-800
                 hover:scale-105
               "
               style={{
@@ -56,20 +67,21 @@ export function PremiumBanner() {
                 opacity: 0.96,
               }}
             >
-              Upgrade Now
+              Upgrade
             </button>
 
             <button
               onClick={() => setVisible(false)}
               className="
                 rounded-lg
-                p-2
-                text-zinc-400
-                hover:bg-zinc-800
-                hover:text-white
+                p-1
+                text-amber-800
+                hover:bg-amber-500/30
+                hover:text-amber-900
+                transition
               "
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
         </div>
