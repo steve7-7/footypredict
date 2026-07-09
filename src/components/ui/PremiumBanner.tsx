@@ -50,6 +50,11 @@ export function PremiumBanner() {
                 hover:bg-green-400
                 hover:scale-105
               "
+              style={{
+                fontFamily: 'Georgia, serif',
+                boxShadow: '0 0 0 rgba(197, 12, 234, 1)',
+                opacity: 0.96,
+              }}
             >
               Upgrade Now
             </button>
