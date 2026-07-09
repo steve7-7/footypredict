@@ -15,6 +15,8 @@ import {
   ChevronDown,
   ChevronUp,
   Trophy,
+  Grid3x3,
+  LayoutTable,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MarketingBanner } from "../components/MarketingBanner";
@@ -70,6 +72,7 @@ export function PastPredictions() {
   const [leagueFilter, setLeagueFilter] = useState("all");
   const [expanded, setExpanded] = useState<number | null>(null);
   const [page, setPage] = useState(1);
+  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
   const fetchHistory = async () => {
     try {
@@ -374,6 +377,32 @@ export function PastPredictions() {
               </div>
             </div>
 
+            {/* View Mode Toggle */}
+            <div className="flex gap-2 mb-6">
+              <button
+                onClick={() => setViewMode("cards")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  viewMode === "cards"
+                    ? "bg-blue-500 text-white"
+                    : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <Grid3x3 className="w-4 h-4" />
+                Cards
+              </button>
+              <button
+                onClick={() => setViewMode("table")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  viewMode === "table"
+                    ? "bg-blue-500 text-white"
+                    : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <LayoutTable className="w-4 h-4" />
+                Table
+              </button>
+            </div>
+
             {/* Filters bar */}
             <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 mb-6 space-y-3">
               {/* Search */}
@@ -441,7 +470,8 @@ export function PastPredictions() {
               )}
             </div>
 
-            {/* Match list */}
+            {/* Match list / Table */}
+            {viewMode === "cards" ? (
             <div className="space-y-3">
               {paginated.map((match, idx) => {
                 const isWon =
@@ -586,6 +616,58 @@ export function PastPredictions() {
                 );
               })}
             </div>
+            ) : (
+            <div className="overflow-x-auto border border-slate-700 rounded-xl">
+              <table className="w-full">
+                <thead className="bg-slate-800 border-b border-slate-700">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wide">Date</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wide">Match</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wide">League</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wide">Tip</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wide">Odds</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wide">Score</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wide">Result</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wide">Profit</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-700">
+                  {paginated.map((match, idx) => {
+                    const isWon =
+                      match.tip_successful === true ||
+                      match.tip_successful === "true" ||
+                      match.tip_successful === 1;
+                    return (
+                      <tr key={idx} className={`hover:bg-slate-700/50 transition-colors ${
+                        isWon ? "bg-green-900/10" : "bg-red-900/10"
+                      }`}>
+                        <td className="px-4 py-3 text-sm text-slate-300 whitespace-nowrap">{formatDate(match.match_dat)}</td>
+                        <td className="px-4 py-3 text-sm text-slate-200 font-medium">{match.home_team} vs {match.away_team}</td>
+                        <td className="px-4 py-3 text-sm text-slate-400">{match.league}</td>
+                        <td className="px-4 py-3 text-sm text-blue-400 font-medium">{match.tip}</td>
+                        <td className="px-4 py-3 text-sm text-center text-slate-300">{match.tip_odd?.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm text-center text-slate-300">{match.result}</td>
+                        <td className="px-4 py-3 text-sm text-center">
+                          <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
+                            isWon
+                              ? "bg-green-500/30 text-green-300"
+                              : "bg-red-500/30 text-red-300"
+                          }`}>
+                            {isWon ? "✓ Won" : "✗ Lost"}
+                          </span>
+                        </td>
+                        <td className={`px-4 py-3 text-sm text-center font-bold ${
+                          match.tip_profit >= 0 ? "text-green-400" : "text-red-400"
+                        }`}>
+                          {match.tip_profit >= 0 ? "+" : ""}{match.tip_profit?.toFixed(1)}u
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            )}
 
             {/* Load more */}
             {hasMore && (
