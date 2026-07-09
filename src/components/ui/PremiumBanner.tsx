@@ -1,7 +1,9 @@
 import { Crown, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function PremiumBanner() {
+  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export function PremiumBanner() {
           {/* Right */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
+              onClick={() => navigate('/premium')}
               className="
                 rounded-lg
                 bg-amber-900
