@@ -74,6 +74,151 @@ export function PastPredictions() {
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
+  const getMockHistoryData = (): HistoryMatch[] => {
+    return [
+      {
+        match_dat: new Date(Date.now() - 86400000).toISOString(),
+        sport: "Football",
+        country: "England",
+        league: "Premier League",
+        home_team: "Liverpool",
+        away_team: "Chelsea",
+        tip: "Over 2.5 Goals",
+        fair_odd: 1.82,
+        tip_odd: 1.85,
+        result: "2 - 1",
+        tip_successful: true,
+        tip_profit: 0.85,
+      },
+      {
+        match_dat: new Date(Date.now() - 172800000).toISOString(),
+        sport: "Football",
+        country: "Spain",
+        league: "La Liga",
+        home_team: "Barcelona",
+        away_team: "Atletico Madrid",
+        tip: "Under 2.5 Goals",
+        fair_odd: 1.75,
+        tip_odd: 1.78,
+        result: "1 - 0",
+        tip_successful: true,
+        tip_profit: 0.78,
+      },
+      {
+        match_dat: new Date(Date.now() - 259200000).toISOString(),
+        sport: "Football",
+        country: "Germany",
+        league: "Bundesliga",
+        home_team: "Bayern Munich",
+        away_team: "Dortmund",
+        tip: "Bayern Munich to Win",
+        fair_odd: 1.92,
+        tip_odd: 1.95,
+        result: "2 - 1",
+        tip_successful: true,
+        tip_profit: 0.95,
+      },
+      {
+        match_dat: new Date(Date.now() - 345600000).toISOString(),
+        sport: "Football",
+        country: "Italy",
+        league: "Serie A",
+        home_team: "Inter Milan",
+        away_team: "AC Milan",
+        tip: "BTTS - Yes",
+        fair_odd: 1.68,
+        tip_odd: 1.72,
+        result: "2 - 2",
+        tip_successful: true,
+        tip_profit: 0.72,
+      },
+      {
+        match_dat: new Date(Date.now() - 432000000).toISOString(),
+        sport: "Football",
+        country: "England",
+        league: "Premier League",
+        home_team: "Manchester City",
+        away_team: "Arsenal",
+        tip: "Man City to Win",
+        fair_odd: 1.88,
+        tip_odd: 1.92,
+        result: "3 - 2",
+        tip_successful: true,
+        tip_profit: 0.92,
+      },
+      {
+        match_dat: new Date(Date.now() - 518400000).toISOString(),
+        sport: "Football",
+        country: "France",
+        league: "Ligue 1",
+        home_team: "PSG",
+        away_team: "Monaco",
+        tip: "PSG to Win",
+        fair_odd: 1.75,
+        tip_odd: 1.78,
+        result: "2 - 0",
+        tip_successful: true,
+        tip_profit: 0.78,
+      },
+      {
+        match_dat: new Date(Date.now() - 604800000).toISOString(),
+        sport: "Football",
+        country: "Spain",
+        league: "La Liga",
+        home_team: "Real Madrid",
+        away_team: "Sevilla",
+        tip: "Real Madrid -1",
+        fair_odd: 1.95,
+        tip_odd: 1.98,
+        result: "2 - 0",
+        tip_successful: true,
+        tip_profit: 0.98,
+      },
+      {
+        match_dat: new Date(Date.now() - 691200000).toISOString(),
+        sport: "Football",
+        country: "Germany",
+        league: "Bundesliga",
+        home_team: "RB Leipzig",
+        away_team: "Bayer Leverkusen",
+        tip: "Over 2.5 Goals",
+        fair_odd: 1.88,
+        tip_odd: 1.90,
+        result: "3 - 1",
+        tip_successful: true,
+        tip_profit: 0.90,
+      },
+      {
+        match_dat: new Date(Date.now() - 777600000).toISOString(),
+        sport: "Football",
+        country: "Italy",
+        league: "Serie A",
+        home_team: "Napoli",
+        away_team: "Roma",
+        tip: "Napoli to Win",
+        fair_odd: 1.82,
+        tip_odd: 1.85,
+        result: "1 - 0",
+        tip_successful: true,
+        tip_profit: 0.85,
+      },
+      {
+        match_dat: new Date(Date.now() - 864000000).toISOString(),
+        sport: "Football",
+        country: "England",
+        league: "Premier League",
+        home_team: "Tottenham",
+        away_team: "West Ham",
+        tip: "Tottenham to Win",
+        fair_odd: 1.78,
+        tip_odd: 1.80,
+        result: "3 - 1",
+        tip_successful: true,
+        tip_profit: 0.80,
+      },
+    ];
+  };
+
   const fetchHistory = async () => {
     try {
       setLoading(true);
@@ -87,9 +232,10 @@ export function PastPredictions() {
       );
       setMatches(sorted);
     } catch (err) {
-      console.error('Failed to fetch history:', err);
-      setError(err instanceof Error ? err.message : "Failed to fetch history");
-      setMatches([]);
+      console.error('Failed to fetch history, using mock data:', err);
+      const mockData = getMockHistoryData();
+      setMatches(mockData);
+      setError("Using demo data. Connect to Vercel to see live predictions.");
     } finally {
       setLoading(false);
     }
