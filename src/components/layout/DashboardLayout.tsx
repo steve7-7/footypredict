@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Button, Badge } from '../ui';
+import { PremiumBanner } from '../ui/PremiumBanner';
 import {
   LayoutDashboard,
   Target,
@@ -82,6 +83,7 @@ export function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans overflow-hidden">
+      <PremiumBanner />
       {/* Mobile sidebar backdrop */}
       {isMobileMenuOpen && (
         <div
