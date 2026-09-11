@@ -1,8 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Button, Badge } from '../ui';
 import { PremiumBanner } from '../ui/PremiumBanner';
+import { Seo } from '../Seo';
 import {
   LayoutDashboard,
   Target,
@@ -18,6 +20,8 @@ import {
   Shield,
   ChevronDown,
   ChevronRight,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -41,6 +45,7 @@ const infoNavItems = [
 
 export function DashboardLayout() {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -83,6 +88,7 @@ export function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans overflow-hidden">
+      <Seo />
       <PremiumBanner />
       {/* Mobile sidebar backdrop */}
       {isMobileMenuOpen && (
@@ -171,6 +177,14 @@ export function DashboardLayout() {
               </p>
             </div>
           </button>
+          <button
+            onClick={toggleTheme}
+            className="w-full flex items-center gap-3 px-2 py-2 mb-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors text-sm text-slate-600 dark:text-slate-400"
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+          </button>
           <Button
             variant="ghost"
             className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm"
@@ -197,13 +211,22 @@ export function DashboardLayout() {
             <Trophy className="w-5 h-5" />
             FootyPredict
           </div>
-          <button
-            onClick={() => handleNav('profile')}
-            className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold"
-            aria-label={`Open profile for ${user?.name}`}
-          >
-            {user?.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <button
+              onClick={() => handleNav('profile')}
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold"
+              aria-label={`Open profile for ${user?.name}`}
+            >
+              {user?.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+            </button>
+          </div>
         </header>
 
         {/* Page Content */}

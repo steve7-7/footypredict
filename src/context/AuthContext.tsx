@@ -27,11 +27,35 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const STORAGE_KEY = 'footypredict.user';
+
+function readStoredUser(): User | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as User) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(readStoredUser);
+
+  const persist = (next: User | null) => {
+    setUser(next);
+    try {
+      if (next) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    } catch {
+      // Storage unavailable (private mode, quota) — keep in-memory state only.
+    }
+  };
 
   const login = (email: string, plan: UserPlan) => {
-    setUser({
+    persist({
       name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
       email,
       plan,
@@ -44,18 +68,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    setUser(null);
+    persist(null);
   };
 
   const upgrade = () => {
     if (user) {
-      setUser({ ...user, plan: 'premium' });
+      persist({ ...user, plan: 'premium' });
     }
   };
 
   const updateProfile = (updates: Partial<User>) => {
     if (user) {
-      setUser({ ...user, ...updates });
+      persist({ ...user, ...updates });
     }
   };
 

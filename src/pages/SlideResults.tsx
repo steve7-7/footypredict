@@ -160,7 +160,7 @@ export function SlideResults() {
         {!canUseLive && (
           <div className="flex items-center gap-2 text-sm bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800">
             <span>🔒 Live results from Betigolo API are Premium only</span>
-            <Button variant="premium" size="sm" onClick={() => setActiveTab('premium')}>Upgrade</Button>
+            <Button variant="premium" size="sm" onClick={() => navigate('/premium')}>Upgrade</Button>
           </div>
         )}
       </div>
@@ -453,11 +453,10 @@ export function SlideResults() {
                         </div>
                       )}
                       <div className="text-xs text-amber-700 dark:text-amber-400 pt-1">
-                        <strong>To get real data:</strong> run this from your terminal (works perfectly):
-                        <pre className="bg-slate-900 text-emerald-300 rounded-md p-3 mt-2 overflow-x-auto text-[11px]">{`curl --request GET \\
-  --url https://betigolo-predictions.p.rapidapi.com/sample \\
-  --header 'x-rapidapi-host: betigolo-predictions.p.rapidapi.com' \\
-  --header 'x-rapidapi-key: b9c6883414msh11dde2eba098703p1a13fdjsne11249e78db1'`}</pre>
+                        <strong>To get real data:</strong> deploy this app to Vercel and set the{' '}
+                        <code className="text-pink-600 dark:text-pink-400">RAPIDAPI_KEY</code> environment
+                        variable. The serverless endpoint will then fetch from the RapidAPI feed without
+                        exposing the key to the browser.
                       </div>
                     </div>
                   </div>
@@ -475,7 +474,7 @@ export function SlideResults() {
                       Fetch Live API Response
                     </Button>
                   ) : (
-                    <Button variant="premium" size="sm" onClick={() => setActiveTab('premium')}>Upgrade to Premium</Button>
+                    <Button variant="premium" size="sm" onClick={() => navigate('/premium')}>Upgrade to Premium</Button>
                   )}
                 </div>
               )}

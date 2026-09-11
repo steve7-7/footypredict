@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '../components/ui';
-import { Check, Crown, Zap, ShieldCheck, CreditCard, ExternalLink, RefreshCw, Lock } from 'lucide-react';
+import { Check, Crown, Zap, ShieldCheck, CreditCard, ExternalLink, RefreshCw, Lock, AlertTriangle } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -10,8 +10,35 @@ declare global {
   }
 }
 
-// Demo Paystack Test Public Key
-const DEFAULT_PAYSTACK_KEY = 'pk_live_d4e12fc3d689e19440973a66eaa985fcfdf1a7cc';
+// Paystack public key — configure via VITE_PAYSTACK_PUBLIC_KEY (.env).
+// If unset, checkout falls back to the simulated flow (no real charge).
+const DEFAULT_PAYSTACK_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || '';
+
+/**
+ * Asks our serverless endpoint to verify a Paystack transaction using the
+ * server-side secret key. Premium is only granted when this returns true.
+ * If the endpoint is unreachable (local dev without Vercel), verification
+ * fails safe — the transaction is never trusted client-side.
+ */
+async function verifyPaymentOnServer(reference: string): Promise<boolean> {
+  if (!reference) return false;
+  try {
+    const response = await fetch(
+      `/api/paystack-verify?reference=${encodeURIComponent(reference)}`,
+      { headers: { Accept: 'application/json' } },
+    );
+    const text = await response.text();
+    let data: any;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return false;
+    }
+    return data?.ok === true && data?.verified === true;
+  } catch {
+    return false;
+  }
+}
 
 const CURRENCIES = [
   { code: 'USD', symbol: '$', price: 19.99, amountInKobo: 1999 }, // Paystack USD expects cents
@@ -28,6 +55,7 @@ export function PremiumUpgrade() {
   const [loadingPaystack, setLoadingPaystack] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState<any>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paystackKey, setPaystackKey] = useState(DEFAULT_PAYSTACK_KEY);
   const [customPhone, setCustomPhone] = useState('+2348012345678');
 
@@ -94,7 +122,14 @@ export function PremiumUpgrade() {
       return;
     }
 
+    if (!paystackKey.trim()) {
+      alert('Paystack public key is not configured. Set VITE_PAYSTACK_PUBLIC_KEY in your environment. Using simulated checkout...');
+      simulateSuccess();
+      return;
+    }
+
     setLoadingPaystack(true);
+    setPaymentError(null);
 
     try {
       const handler = window.PaystackPop.setup({
@@ -122,10 +157,23 @@ export function PremiumUpgrade() {
             },
           ],
         },
-        callback: (response: any) => {
+        callback: async (response: any) => {
           setLoadingPaystack(false);
           setPaymentSuccess(response);
-          upgrade();
+          setPaymentError(null);
+
+          // Never grant premium from the client callback alone — verify
+          // the transaction server-side with the Paystack secret key first.
+          const verified = await verifyPaymentOnServer(response?.reference);
+          if (verified) {
+            upgrade();
+          } else {
+            setPaymentError(
+              'Your payment was received but could not be verified. Please contact support and quote reference ' +
+                (response?.reference || 'N/A') +
+                '.',
+            );
+          }
         },
         onClose: () => {
           setLoadingPaystack(false);
@@ -269,13 +317,13 @@ export function PremiumUpgrade() {
 
                 <div className="space-y-3 pt-1">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Paystack Test Public Key</label>
+                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Paystack Public Key</label>
                     <input
                       type="text"
                       value={paystackKey}
                       onChange={(e) => setPaystackKey(e.target.value)}
                       className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 font-mono text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-amber-500 outline-none text-[11px]"
-                      placeholder="pk_test_..."
+                      placeholder="pk_live_... / pk_test_... (set VITE_PAYSTACK_PUBLIC_KEY)"
                     />
                     <p className="text-[10px] text-slate-400 mt-1">Uses official Paystack inline popup sandbox environment.</p>
                   </div>
@@ -306,6 +354,14 @@ export function PremiumUpgrade() {
                   <span>Accepted Methods:</span>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">💳 Card · 🏦 Transfer · 📱 USSD · ⚡ Mobile Money</span>
                 </div>
+              </div>
+            )}
+
+            {/* Verification error */}
+            {paymentError && (
+              <div className="flex items-start gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-xs rounded-lg p-3">
+                <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+                <span>{paymentError}</span>
               </div>
             )}
 

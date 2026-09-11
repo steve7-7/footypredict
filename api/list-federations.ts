@@ -1,0 +1,17 @@
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import { rapidGet } from "../lib/rapidapi";
+
+export default async (req: VercelRequest, res: VercelResponse) => {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const result = await rapidGet({
+    host: "football-prediction-api.p.rapidapi.com",
+    path: "/api/v2/list-federations",
+    cacheKey: "list-federations",
+    ttl: 24 * 60 * 60 * 1000, // federations rarely change
+  });
+
+  return res.status(result.status).json(result.body);
+};

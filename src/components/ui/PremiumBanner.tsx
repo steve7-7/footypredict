@@ -1,33 +1,31 @@
 import { Crown, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export function PremiumBanner() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const showTimer = setInterval(() => {
-      setVisible(true);
-      const hideTimer = setTimeout(() => {
-        setVisible(false);
-      }, 5000);
-      return () => clearTimeout(hideTimer);
-    }, 30000);
-
-    const initialTimer = setTimeout(() => {
-      setVisible(true);
-      const hideTimer = setTimeout(() => {
-        setVisible(false);
-      }, 5000);
-      return () => clearTimeout(hideTimer);
-    }, 30000);
-
+    const show = () => setVisible(true);
+    const initialTimer = setTimeout(show, 30000);
+    const interval = setInterval(show, 30000);
     return () => {
-      clearInterval(showTimer);
       clearTimeout(initialTimer);
+      clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+    const hideTimer = setTimeout(() => setVisible(false), 5000);
+    return () => clearTimeout(hideTimer);
+  }, [visible]);
+
+  // Don't upsell members who are already premium.
+  if (user?.plan === 'premium') return null;
 
   if (!visible) return null;
 
