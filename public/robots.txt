@@ -3,11 +3,6 @@
 
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /private
-
-# Crawl delay for respectful crawling
-Crawl-delay: 1
 
 # Specific rules for popular search engines
 User-agent: Googlebot

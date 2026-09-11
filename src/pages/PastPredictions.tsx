@@ -323,23 +323,6 @@ export function PastPredictions() {
   };
   const currentStreak = getCurrentStreak();
 
-  // Per-league stats
-  const leagueStats = matches.reduce(
-    (acc, m) => {
-      if (!acc[m.league]) {
-        acc[m.league] = { won: 0, total: 0 };
-      }
-      acc[m.league].total++;
-      const isWon =
-        m.tip_successful === true ||
-        m.tip_successful === "true" ||
-        m.tip_successful === 1;
-      if (isWon) acc[m.league].won++;
-      return acc;
-    },
-    {} as Record<string, { won: number; total: number }>,
-  );
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       <MarketingBanner />

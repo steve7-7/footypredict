@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Button, Card, CardContent } from '../ui';
-import { Trophy, Mail, Lock, Eye, EyeOff, CheckCircle2, TrendingUp, Shield, Users } from 'lucide-react';
+import { Trophy, Mail, Lock, Eye, EyeOff, CheckCircle2, TrendingUp, Shield, Users, X } from 'lucide-react';
 
 export function LoginScreen() {
   const { login } = useAuth();
@@ -10,6 +10,8 @@ export function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [legal, setLegal] = useState<null | 'terms' | 'privacy'>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,7 +124,13 @@ export function LoginScreen() {
                       Password
                     </label>
                     {!isSignUp && (
-                      <a href="#" className="text-xs text-blue-600 hover:text-blue-500 font-medium">Forgot password?</a>
+                      <button
+                        type="button"
+                        onClick={() => setResetSent(true)}
+                        className="text-xs text-blue-600 hover:text-blue-500 font-medium"
+                      >
+                        Forgot password?
+                      </button>
                     )}
                   </div>
                   <div className="relative">
@@ -176,6 +184,13 @@ export function LoginScreen() {
                     </span>
                   ) : (isSignUp ? 'Create Account' : 'Sign In')}
                 </Button>
+
+                {resetSent && (
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-3">
+                    If an account exists for {email || 'your email'}, a password reset link has been sent.
+                    (Demo — no email is actually sent.)
+                  </p>
+                )}
               </form>
 
               <div className="mt-6 text-center">
@@ -193,9 +208,9 @@ export function LoginScreen() {
               <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
                 <p className="text-xs text-slate-400 text-center leading-relaxed">
                   By signing in, you agree to our{' '}
-                  <a href="#" className="text-blue-500 hover:underline">Terms of Service</a>{' '}
+                  <button type="button" onClick={() => setLegal('terms')} className="text-blue-500 hover:underline">Terms of Service</button>{' '}
                   and{' '}
-                  <a href="#" className="text-blue-500 hover:underline">Privacy Policy</a>.
+                  <button type="button" onClick={() => setLegal('privacy')} className="text-blue-500 hover:underline">Privacy Policy</button>.
                 </p>
               </div>
             </CardContent>
@@ -206,6 +221,53 @@ export function LoginScreen() {
           </p>
         </div>
       </div>
+
+      {/* Legal modal */}
+      {legal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
+          onClick={() => setLegal(null)}
+        >
+          <div
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                {legal === 'terms' ? 'Terms of Service' : 'Privacy Policy'}
+              </h3>
+              <button
+                onClick={() => setLegal(null)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {legal === 'terms' ? (
+              <ul className="text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc pl-4">
+                <li>FootyPredict is a prediction platform for entertainment; tips are not financial advice.</li>
+                <li>Free and Premium tiers, features and pricing are subject to change.</li>
+                <li>Always bet responsibly and only with money you can afford to lose.</li>
+              </ul>
+            ) : (
+              <ul className="text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc pl-4">
+                <li>We collect your name, email, and password when you create an account.</li>
+                <li>Payment details are processed by our payment provider and never stored on our servers.</li>
+                <li>You can view the full privacy policy after signing in.</li>
+              </ul>
+            )}
+
+            <button
+              onClick={() => setLegal(null)}
+              className="w-full h-10 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

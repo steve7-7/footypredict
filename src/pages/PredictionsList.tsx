@@ -4,6 +4,7 @@ import { MOCK_PREDICTIONS } from '../data/mockData';
 import { PredictionCard } from '../components/predictions/PredictionCard';
 import { Button, Card, CardContent, Badge } from '../components/ui';
 import { getPredictions, getFederations, getMarkets, normalizeApiPrediction } from '../services/footballApi';
+import { toLocalISODate } from '../utils/date';
 import { RefreshCw, WifiOff, Wifi, Calendar, Globe2, Filter, Target, Code, Copy, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -15,7 +16,7 @@ export function PredictionsList() {
   const [filter, setFilter] = useState<'all' | 'free' | 'premium' | 'live'>('all');
   const [selectedFederation, setSelectedFederation] = useState<string>('');
   const [selectedMarket, setSelectedMarket] = useState<string>('classic');
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState<string>(toLocalISODate());
 
   const [livePredictions, setLivePredictions] = useState<PredictionT[]>([]);
   const [federations, setFederations] = useState<{ key: string; name: string }[]>([]);

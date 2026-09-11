@@ -23,6 +23,11 @@ export function UserProfile() {
   const [betigoloResults, setBetigoloResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ current: '', next: '', confirm: '' });
+  const [passwordMsg, setPasswordMsg] = useState<string | null>(null);
+  const [lastChanged, setLastChanged] = useState('3 months ago');
+  const [twoFA, setTwoFA] = useState(false);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -56,6 +61,28 @@ export function UserProfile() {
   const handleSave = () => {
     updateProfile({ ...form, notifications: notifs });
     setEditMode(false);
+  };
+
+  const handleChangePassword = () => {
+    if (!passwordForm.current) {
+      setPasswordMsg('Enter your current password.');
+      return;
+    }
+    if (passwordForm.next.length < 6) {
+      setPasswordMsg('New password must be at least 6 characters.');
+      return;
+    }
+    if (passwordForm.next !== passwordForm.confirm) {
+      setPasswordMsg('New passwords do not match.');
+      return;
+    }
+    setPasswordMsg('✅ Password updated successfully. (Demo — no server change.)');
+    setPasswordForm({ current: '', next: '', confirm: '' });
+    setLastChanged('just now');
+    setTimeout(() => {
+      setShowPasswordForm(false);
+      setPasswordMsg(null);
+    }, 1800);
   };
 
   const handleCancel = () => {
@@ -455,19 +482,63 @@ export function UserProfile() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800">
-                <div>
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-200">Password</p>
-                  <p className="text-xs text-slate-500">Last changed 3 months ago</p>
+              <div className="py-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-800 dark:text-slate-200">Password</p>
+                    <p className="text-xs text-slate-500">Last changed {lastChanged}</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => { setShowPasswordForm(o => !o); setPasswordMsg(null); }}>
+                    {showPasswordForm ? 'Cancel' : 'Change Password'}
+                  </Button>
                 </div>
-                <Button variant="outline" size="sm">Change Password</Button>
+
+                {showPasswordForm && (
+                  <div className="mt-3 space-y-2">
+                    <input
+                      type="password"
+                      placeholder="Current password"
+                      value={passwordForm.current}
+                      onChange={e => setPasswordForm(f => ({ ...f, current: e.target.value }))}
+                      className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    />
+                    <input
+                      type="password"
+                      placeholder="New password (min 6 characters)"
+                      value={passwordForm.next}
+                      onChange={e => setPasswordForm(f => ({ ...f, next: e.target.value }))}
+                      className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    />
+                    <input
+                      type="password"
+                      placeholder="Confirm new password"
+                      value={passwordForm.confirm}
+                      onChange={e => setPasswordForm(f => ({ ...f, confirm: e.target.value }))}
+                      className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    />
+                    {passwordMsg && (
+                      <p className="text-xs text-slate-600 dark:text-slate-400">{passwordMsg}</p>
+                    )}
+                    <Button size="sm" onClick={handleChangePassword}>Update Password</Button>
+                  </div>
+                )}
               </div>
+
               <div className="flex items-center justify-between py-3">
                 <div>
                   <p className="text-sm font-medium text-slate-800 dark:text-slate-200">Two-Factor Authentication</p>
-                  <p className="text-xs text-slate-500">Add extra security to your account</p>
+                  <p className="text-xs text-slate-500">
+                    {twoFA ? 'Enabled — an extra code is required at sign-in.' : 'Add extra security to your account'}
+                  </p>
                 </div>
-                <Button variant="outline" size="sm">Enable 2FA</Button>
+                {twoFA ? (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="success">Enabled</Badge>
+                    <Button variant="outline" size="sm" onClick={() => setTwoFA(false)}>Disable</Button>
+                  </div>
+                ) : (
+                  <Button variant="outline" size="sm" onClick={() => setTwoFA(true)}>Enable 2FA</Button>
+                )}
               </div>
             </CardContent>
           </Card>
