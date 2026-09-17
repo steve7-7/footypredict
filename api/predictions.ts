@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { rapidGet, localISODate } from "../lib/rapidapi";
 
 const first = (v: string | string[] | undefined): string | undefined =>
