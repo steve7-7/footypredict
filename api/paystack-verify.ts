@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { verifyPaystackTransaction } from "../lib/paystack";
 
 const first = (v: string | string[] | undefined): string | undefined =>
